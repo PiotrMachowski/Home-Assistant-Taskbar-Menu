@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1169
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Home Assistant Taskbar Menu", "Home Assistant Taskbar Menu\Home Assistant Taskbar Menu.csproj", "{B49305F6-8A11-43D6-AD36-864C95D4F015}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B49305F6-8A11-43D6-AD36-864C95D4F015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B49305F6-8A11-43D6-AD36-864C95D4F015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B49305F6-8A11-43D6-AD36-864C95D4F015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B49305F6-8A11-43D6-AD36-864C95D4F015}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4840496F-2F22-4CDB-BCAD-CDB9F36F3313}
+	EndGlobalSection
+EndGlobal
