@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Home_Assistant_Taskbar_Menu"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="MainWindow" 
+        Title="MainWindow"
         Visibility="Hidden" Width="1" Height="1">
     <tb:TaskbarIcon
         x:Name="TaskbarIcon"
@@ -14,7 +14,7 @@
         ToolTip="Home Assistant"
         MenuActivation="LeftOrRightClick">
         <tb:TaskbarIcon.ContextMenu>
-            <ContextMenu x:Name="TaskbarMenuRoot" StaysOpen="True"/>
+            <ContextMenu x:Name="TaskbarMenuRoot" StaysOpen="True" />
         </tb:TaskbarIcon.ContextMenu>
     </tb:TaskbarIcon>
 </Window>

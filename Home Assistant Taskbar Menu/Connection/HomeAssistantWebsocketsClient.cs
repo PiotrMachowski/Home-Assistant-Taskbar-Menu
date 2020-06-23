@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using HADotNet.Core.Models;
+using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,7 +19,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         private readonly List<ApiConsumer> _consumers;
         private long _counter;
         private bool _authenticated;
-        private readonly List<Action<StateObject>> _stateChangeListeners;
+        private readonly List<Action<MyStateObject>> _stateChangeListeners;
 
         public HomeAssistantWebsocketsClient(Configuration configuration)
         {
@@ -28,7 +28,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _websocketClient = new WebsocketClient(new Uri(configuration.Url));
             _timer = new Timer(60 * 1000 * 10);
             _consumers = new List<ApiConsumer>();
-            _stateChangeListeners = new List<Action<StateObject>>();
+            _stateChangeListeners = new List<Action<MyStateObject>>();
             bool debug = !true;
             if (debug)
             {
@@ -51,15 +51,16 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     },
                     msg =>
                     {
-                        StateObject stateObject = JObject.Parse(msg.Text)["event"]["data"]["new_state"]
-                            .ToObject<StateObject>();
-                        _stateChangeListeners.ForEach(a => Task.Run(() => a.Invoke(stateObject)));
+                        MyStateObject myStateObject = EntityCreator.CreateFromChangedState(msg.Text);
+                        if (myStateObject != null)
+                        {
+                            _stateChangeListeners.ForEach(a => Task.Run(() => a.Invoke(myStateObject)));
+                        }
                     }));
             _websocketClient.ReconnectionHappened.Subscribe((recInfo) =>
             {
                 Console.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}");
             });
-
         }
 
         private void AuthFlow()
@@ -117,12 +118,12 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             await CallApi(id, subscribeMsg);
         }
 
-        public void AddStateChangeListener(Action<StateObject> handler)
+        public void AddStateChangeListener(Action<MyStateObject> handler)
         {
             _stateChangeListeners.Add(handler);
         }
 
-        public async Task GetStates(Action<List<StateObject>> callback)
+        public async Task GetStates(Action<List<MyStateObject>> callback)
         {
             Console.WriteLine("GETTING STATES");
             var id = _counter++;
@@ -130,8 +131,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                 $"{{ \"id\": {id},\"type\": \"get_states\"}}";
             await CallApi(id, subscribeMsg, msg =>
             {
-                List<StateObject> states = JObject.Parse(msg.Text)["result"].Children<JToken>()
-                    .Select(n => n.ToObject<StateObject>()).ToList();
+                List<MyStateObject> states = EntityCreator.CreateFromStateList(msg.Text);
                 states.Sort((o1, o2) => string.Compare(o1.EntityId, o2.EntityId, StringComparison.Ordinal));
                 Task.Run(() => callback.Invoke(states));
             });

@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using HADotNet.Core.Models;
 using Home_Assistant_Taskbar_Menu.Connection;
-using Home_Assistant_Taskbar_Menu.Domains;
+using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 
 namespace Home_Assistant_Taskbar_Menu
@@ -19,7 +18,7 @@ namespace Home_Assistant_Taskbar_Menu
     {
         private ViewConfiguration _viewConfiguration;
         private readonly List<Control> _defaultMenuItems;
-        private readonly List<StateObject> _stateObjects;
+        private readonly List<MyStateObject> _stateObjects;
 
         public ObservableCollection<Control> Menu { get; set; }
 
@@ -28,7 +27,7 @@ namespace Home_Assistant_Taskbar_Menu
             _viewConfiguration = viewConfiguration;
             _defaultMenuItems = CreateDefaultMenuItems(configuration.Url);
             Menu = new ObservableCollection<Control>();
-            _stateObjects = new List<StateObject>();
+            _stateObjects = new List<MyStateObject>();
             InitializeComponent();
             TaskbarMenuRoot.ItemsSource = Menu;
             check(configuration);
@@ -80,21 +79,21 @@ namespace Home_Assistant_Taskbar_Menu
             await Task.Delay(1000);
             await HaClientContext.GetStates(s =>
             {
-                UpdateStateObjects(s);
+                UpdateMyStateObjects(s);
                 Console.WriteLine($"RECEIVED STATES: {s.Count}");
                 s.ForEach(c => { Console.WriteLine($"   {c.EntityId}: {c.State}"); });
                 Dispatcher.Invoke(UpdateTree);
             });
         }
 
-        private List<Control> CreateStructure(List<StateObject> stateObjects, ViewConfiguration viewConfiguration)
+        private List<Control> CreateStructure(List<MyStateObject> stateObjects, ViewConfiguration viewConfiguration)
         {
             return viewConfiguration.Children.Count == 0
-                ? ConvertToMenuItems(stateObjects).Select(e => (Control) e.ItemsControl).ToList()
+                ? stateObjects.Select(e => e.ToMenuItem(Dispatcher, null)).ToList()
                 : viewConfiguration.Children.Select(c => MapToControl(stateObjects, c)).ToList();
         }
 
-        private Control MapToControl(List<StateObject> stateObjects, ViewConfiguration viewConfiguration)
+        private Control MapToControl(List<MyStateObject> stateObjects, ViewConfiguration viewConfiguration)
         {
             switch (viewConfiguration.NodeType)
             {
@@ -104,12 +103,11 @@ namespace Home_Assistant_Taskbar_Menu
                     var stateObject = stateObjects.Find(e => e.EntityId.Equals(viewConfiguration.EntityId));
                     return stateObject == null
                         ? new MenuItem {Header = viewConfiguration.EntityId}
-                        : ConvertToMenuItems(new List<StateObject> {stateObject}, viewConfiguration.Name)[0]
-                            .ItemsControl;
+                        : stateObject.ToMenuItem(Dispatcher, viewConfiguration.Name);
                 case ViewConfiguration.Type.Folder:
                     var node = new MenuItem
                     {
-                        Header = viewConfiguration.Name,
+                        Header = viewConfiguration.Name
                     };
                     viewConfiguration.Children.Select(c => MapToControl(stateObjects, c)).ToList()
                         .ForEach(c => node.Items.Add(c));
@@ -119,24 +117,25 @@ namespace Home_Assistant_Taskbar_Menu
             }
         }
 
-        private void UpdateStateObjects(List<StateObject> state)
+        private void UpdateMyStateObjects(List<MyStateObject> state)
         {
             _stateObjects.Clear();
-            _stateObjects.AddRange(state.Where(Domain.IsSupported));
+            _stateObjects.AddRange(state);
+            // _stateObjects.AddRange(state.Where(EntityCreator.IsSupported));
         }
 
-        private List<EntityMenuItem> ConvertToMenuItems(List<StateObject> stateObjects, string name = null)
-        {
-            List<EntityMenuItem> items = new List<EntityMenuItem>();
-            stateObjects.ForEach(s => Domain.ConvertToMenuItem(s, name, items.Add, Dispatcher));
-            return items;
-        }
+        // private List<EntityMenuItem> ConvertToMenuItems(List<MyStateObject> stateObjects, string name = null)
+        // {
+        // List<EntityMenuItem> items = new List<EntityMenuItem>();
+        // stateObjects.ForEach(s => EntityCreator.ConvertToMenuItem(s, name, items.Add, Dispatcher));
+        // return items;
+        // }
 
-        private void UpdateState(StateObject changedState)
+        private void UpdateState(MyStateObject changedState)
         {
             Console.WriteLine($"STATE UPDATED: {changedState.EntityId} => {changedState.State}");
             if (_viewConfiguration.ContainsEntity(changedState) ||
-                _viewConfiguration.Children.Count == 0 && Domain.IsSupported(changedState))
+                _viewConfiguration.Children.Count == 0)
             {
                 var ind = _stateObjects.FindIndex(s => s.EntityId == changedState.EntityId);
                 if (ind >= 0)
@@ -157,24 +156,6 @@ namespace Home_Assistant_Taskbar_Menu
             Menu.Clear();
             CreateStructure(_stateObjects, _viewConfiguration).ForEach(Menu.Add);
             _defaultMenuItems.ForEach(Menu.Add);
-        }
-    }
-
-    public class EntityMenuItem
-    {
-        public StateObject StateObject { get; set; }
-        public ItemsControl ItemsControl { get; set; }
-
-        public EntityMenuItem(ItemsControl itemsControl, StateObject stateObject)
-        {
-            ItemsControl = itemsControl;
-            StateObject = stateObject;
-        }
-
-        public void Update(EntityMenuItem newValue)
-        {
-            ItemsControl = newValue.ItemsControl;
-            StateObject = newValue.StateObject;
         }
     }
 }

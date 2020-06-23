@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using HADotNet.Core.Models;
+using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 
 namespace Home_Assistant_Taskbar_Menu
@@ -14,7 +14,7 @@ namespace Home_Assistant_Taskbar_Menu
 
         public ViewConfiguration ViewConfiguration { get; set; }
 
-        public ViewConfigurationDialog(List<StateObject> stateObjects)
+        public ViewConfigurationDialog(List<MyStateObject> stateObjects)
         {
             InitializeComponent();
             stateObjects.ForEach(s => EntityIdComboBox.Items.Add(s.EntityId));

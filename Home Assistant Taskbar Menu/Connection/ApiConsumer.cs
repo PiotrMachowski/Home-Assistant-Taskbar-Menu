@@ -24,6 +24,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             {
                 Action.Invoke(message);
             }
+
             return invoke && DeleteAfterRun;
         }
     }

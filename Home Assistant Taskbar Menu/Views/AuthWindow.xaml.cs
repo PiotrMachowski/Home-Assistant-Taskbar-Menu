@@ -88,9 +88,9 @@ namespace Home_Assistant_Taskbar_Menu
         private string GetUrl()
         {
             return ((UrlTextBox?.Text ?? "")
-                   .Replace("https://", "wss://")
-                   .Replace("http://", "ws://")
-                   + "/api/websocket").Replace("//api", "/api");
+                    .Replace("https://", "wss://")
+                    .Replace("http://", "ws://")
+                    + "/api/websocket").Replace("//api", "/api");
         }
     }
 }

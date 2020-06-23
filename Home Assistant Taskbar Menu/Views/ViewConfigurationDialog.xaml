@@ -5,21 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Home_Assistant_Taskbar_Menu"
         mc:Ignorable="d" WindowStartupLocation="CenterOwner"
-        Title="Add Entry" 
+        Title="Add Entry"
         Icon="../Images/small.ico"
         Height="200" Width="400" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition Name="RowEntityId1"/>
-            <RowDefinition Name="RowEntityId2"/>
+            <RowDefinition Name="RowEntityId1" />
+            <RowDefinition Name="RowEntityId2" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Label Content="Name" Margin="3" Grid.Row="0" VerticalContentAlignment="Center" />
-        <TextBox Text="" Name="NameTextBox"  Margin="3" Grid.Row="1" VerticalContentAlignment="Center" TextChanged="ValidateData" />
+        <TextBox Text="" Name="NameTextBox" Margin="3" Grid.Row="1" VerticalContentAlignment="Center"
+                 TextChanged="ValidateData" />
         <Label Content="Entity id" Margin="3" Grid.Row="2" VerticalContentAlignment="Center" />
-        <ComboBox Name="EntityIdComboBox" Grid.Row="3" Margin="3" VerticalContentAlignment="Center" SelectionChanged="ValidateData"/>
-        <Button Name="SaveButton" Click="Save" Content="Save" Grid.Row="4" Margin="3" VerticalContentAlignment="Center" IsEnabled="False" />
+        <ComboBox Name="EntityIdComboBox" Grid.Row="3" Margin="3" VerticalContentAlignment="Center"
+                  SelectionChanged="ValidateData" />
+        <Button Name="SaveButton" Click="Save" Content="Save" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"
+                IsEnabled="False" />
     </Grid>
 </Window>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using HADotNet.Core.Models;
+using Home_Assistant_Taskbar_Menu.Entities;
 
 namespace Home_Assistant_Taskbar_Menu.Utils
 {
@@ -14,7 +14,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 
         public List<ViewConfiguration> Children { get; set; } = new List<ViewConfiguration>();
 
-        public bool ContainsEntity(StateObject stateObject)
+        public bool ContainsEntity(MyStateObject stateObject)
         {
             return stateObject.EntityId == EntityId || Children.Any(c => c.ContainsEntity(stateObject));
         }

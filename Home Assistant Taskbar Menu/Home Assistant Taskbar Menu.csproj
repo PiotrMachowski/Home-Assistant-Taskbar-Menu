@@ -84,17 +84,11 @@
     <Reference Include="Costura, Version=3.3.3.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.3.3\lib\net40\Costura.dll</HintPath>
     </Reference>
-    <Reference Include="HADotNet.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HADotNet.Core.1.3.0\lib\netstandard2.0\HADotNet.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp, Version=106.11.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.11.4\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -140,25 +134,26 @@
     <Compile Include="Connection\ApiConsumer.cs" />
     <Compile Include="Connection\HomeAssistantServiceCallData.cs" />
     <Compile Include="Connection\HomeAssistantWebsocketsClient.cs" />
+    <Compile Include="Entities\Automation.cs" />
+    <Compile Include="Entities\Climate.cs" />
+    <Compile Include="Entities\Cover.cs" />
+    <Compile Include="Entities\Fan.cs" />
+    <Compile Include="Entities\InputBoolean.cs" />
+    <Compile Include="Entities\InputNumber.cs" />
+    <Compile Include="Entities\InputSelect.cs" />
+    <Compile Include="Entities\Light.cs" />
+    <Compile Include="Entities\Lock.cs" />
+    <Compile Include="Entities\MediaPlayer.cs" />
+    <Compile Include="Entities\MyStateObject.cs" />
+    <Compile Include="Entities\Scene.cs" />
+    <Compile Include="Entities\Switch.cs" />
+    <Compile Include="Entities\Script.cs" />
+    <Compile Include="Entities\Vacuum.cs" />
+    <Compile Include="Utils\EntityCreator.cs" />
     <Compile Include="Views\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Connection\HaClientContext.cs" />
-    <Compile Include="Domains\Automation.cs" />
-    <Compile Include="Domains\Climate.cs" />
-    <Compile Include="Domains\Cover.cs" />
-    <Compile Include="Domains\Domain.cs" />
-    <Compile Include="Domains\Fan.cs" />
-    <Compile Include="Domains\InputBoolean.cs" />
-    <Compile Include="Domains\InputNumber.cs" />
-    <Compile Include="Domains\InputSelect.cs" />
-    <Compile Include="Domains\Light.cs" />
-    <Compile Include="Domains\Lock.cs" />
-    <Compile Include="Domains\MediaPlayer.cs" />
-    <Compile Include="Domains\Scene.cs" />
-    <Compile Include="Domains\Script.cs" />
-    <Compile Include="Domains\Switch.cs" />
-    <Compile Include="Domains\Vacuum.cs" />
     <Compile Include="Utils\Configuration.cs" />
     <Compile Include="Utils\Storage.cs" />
     <Compile Include="Utils\ViewConfiguration.cs" />
@@ -243,6 +238,7 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.4.0.2\build\Fody.targets" Condition="Exists('..\packages\Fody.4.0.2\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

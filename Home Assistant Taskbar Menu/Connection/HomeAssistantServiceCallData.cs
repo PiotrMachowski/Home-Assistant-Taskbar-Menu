@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using HADotNet.Core.Models;
+using Home_Assistant_Taskbar_Menu.Entities;
 using Newtonsoft.Json;
 
 namespace Home_Assistant_Taskbar_Menu.Connection
@@ -20,7 +20,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             ServiceData = serviceData;
         }
 
-        public HomeAssistantServiceCallData(string domain, string service, StateObject stateObject,
+        public HomeAssistantServiceCallData(string service, MyStateObject stateObject,
             params Tuple<string, object>[] data)
         {
             var serviceData = new Dictionary<string, object>
@@ -32,7 +32,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                 serviceData[parameter] = value;
             }
 
-            Domain = domain;
+            Domain = stateObject.Domain();
             Service = service;
             ServiceData = serviceData;
         }

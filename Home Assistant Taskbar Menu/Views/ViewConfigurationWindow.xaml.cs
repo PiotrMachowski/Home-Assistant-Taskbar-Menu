@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using HADotNet.Core.Models;
+using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 using Newtonsoft.Json;
 
@@ -14,10 +14,10 @@ namespace Home_Assistant_Taskbar_Menu
     /// </summary>
     public partial class ViewConfigurationWindow : Window
     {
-        private readonly List<StateObject> _stateObjects;
+        private readonly List<MyStateObject> _stateObjects;
         public ViewConfiguration ViewConfiguration { get; set; }
 
-        public ViewConfigurationWindow(List<StateObject> stateObjects, ViewConfiguration viewConfiguration)
+        public ViewConfigurationWindow(List<MyStateObject> stateObjects, ViewConfiguration viewConfiguration)
         {
             _stateObjects = stateObjects;
             InitializeComponent();
@@ -34,13 +34,13 @@ namespace Home_Assistant_Taskbar_Menu
             addEntityMenuItem.Click += AddEntityClick;
             addNodeMenuItem.Click += AddNodeClick;
             addSeparatorMenuItem.Click += AddSeparatorClick;
+            ViewConfiguration.Children.ForEach(c => Add(ViewConfiguration, c, TreeView));
         }
 
         private void AddEntityClick(object sender, RoutedEventArgs e)
         {
             var viewConfigurationDialog = new ViewConfigurationDialog(_stateObjects);
-            var completed = viewConfigurationDialog
-                .ShowDialog();
+            var completed = viewConfigurationDialog.ShowDialog();
             if (completed == true)
             {
                 ViewConfiguration.Children.Add(viewConfigurationDialog.ViewConfiguration);
@@ -78,7 +78,7 @@ namespace Home_Assistant_Taskbar_Menu
                         ContextMenu = new ContextMenu
                         {
                             Placement = PlacementMode.MousePoint,
-                            Items = { deleteMenuItem }
+                            Items = {deleteMenuItem}
                         }
                     };
                     deleteMenuItem.Click += (sender, args) =>
@@ -101,7 +101,7 @@ namespace Home_Assistant_Taskbar_Menu
                         ContextMenu = new ContextMenu
                         {
                             Placement = PlacementMode.MousePoint,
-                            Items = { deleteMenuItem }
+                            Items = {deleteMenuItem}
                         }
                     };
                     deleteMenuItem.Click += (sender, args) =>
@@ -112,9 +112,9 @@ namespace Home_Assistant_Taskbar_Menu
                     root.Items.Add(entityRow);
                     break;
                 case ViewConfiguration.Type.Folder:
-                    var addEntityMenuItem = new MenuItem { Header = "Add Entity" };
-                    var addNodeMenuItem = new MenuItem { Header = "Add Node" };
-                    var addSeparatorMenuItem = new MenuItem { Header = "Add Separator" };
+                    var addEntityMenuItem = new MenuItem {Header = "Add Entity"};
+                    var addNodeMenuItem = new MenuItem {Header = "Add Node"};
+                    var addSeparatorMenuItem = new MenuItem {Header = "Add Separator"};
                     var nodeRow = new TreeViewItem
                     {
                         Header = $"{viewConfiguration.Name}",
@@ -122,9 +122,9 @@ namespace Home_Assistant_Taskbar_Menu
                         {
                             Placement = PlacementMode.MousePoint,
                             Items =
-                        {
-                            addEntityMenuItem, addNodeMenuItem, addSeparatorMenuItem, deleteMenuItem
-                        }
+                            {
+                                addEntityMenuItem, addNodeMenuItem, addSeparatorMenuItem, deleteMenuItem
+                            }
                         }
                     };
                     addEntityMenuItem.Click += (sender, args) =>
@@ -166,7 +166,7 @@ namespace Home_Assistant_Taskbar_Menu
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         private void Save(object sender, RoutedEventArgs e)
         {
             Console.WriteLine(JsonConvert.SerializeObject(ViewConfiguration));
