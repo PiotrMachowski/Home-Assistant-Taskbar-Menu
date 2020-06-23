@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Navigation;
+using Home_Assistant_Taskbar_Menu.Utils;
 
 namespace Home_Assistant_Taskbar_Menu.Views
 {
@@ -15,14 +16,9 @@ namespace Home_Assistant_Taskbar_Menu.Views
         public AboutWindow()
         {
             InitializeComponent();
-            NameAndVersionLabel.Content =
-                $"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
-            CopyrightInfoLabel.Content = Assembly.GetExecutingAssembly().CustomAttributes
-                .Where(ca => ca.AttributeType?.FullName == "System.Reflection.AssemblyCopyrightAttribute")
-                .Select(ca => ca.ConstructorArguments[0]).First().Value.ToString();
-            RepoHyperlink.NavigateUri = new Uri(Assembly.GetExecutingAssembly().CustomAttributes
-                .Where(ca => ca.AttributeType?.FullName == "System.Reflection.AssemblyDescriptionAttribute")
-                .Select(ca => ca.ConstructorArguments[0]).First().Value.ToString());
+            NameAndVersionLabel.Content = ResourceProvider.NameAndVersion();
+            CopyrightInfoLabel.Content = ResourceProvider.CopyrightInfo();
+            RepoHyperlink.NavigateUri = new Uri(ResourceProvider.RepoUri());
         }
 
         private void OpenHyperlink(object sender, RequestNavigateEventArgs e)

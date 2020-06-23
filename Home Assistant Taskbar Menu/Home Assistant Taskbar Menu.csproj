@@ -151,6 +151,7 @@
     <Compile Include="Entities\Script.cs" />
     <Compile Include="Entities\Vacuum.cs" />
     <Compile Include="Utils\EntityCreator.cs" />
+    <Compile Include="Utils\ResourceProvider.cs" />
     <Compile Include="Views\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>

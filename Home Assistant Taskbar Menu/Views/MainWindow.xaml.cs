@@ -25,8 +25,9 @@ namespace Home_Assistant_Taskbar_Menu
 
         public MainWindow(Configuration configuration, ViewConfiguration viewConfiguration)
         {
+            var latestVersion = ResourceProvider.LatestVersion();
             _viewConfiguration = viewConfiguration;
-            _defaultMenuItems = CreateDefaultMenuItems(configuration.Url);
+            _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
             Menu = new ObservableCollection<Control>();
             _stateObjects = new List<Entity>();
             InitializeComponent();
@@ -34,7 +35,8 @@ namespace Home_Assistant_Taskbar_Menu
             Task.Run(() => { InitConnection(configuration).Wait(); });
         }
 
-        private List<Control> CreateDefaultMenuItems(string configurationUrl)
+        private List<Control> CreateDefaultMenuItems(string configurationUrl,
+            (string version, string url) latestVersion)
         {
             var url = configurationUrl.Replace("wss://", "https://")
                 .Replace("ws://", "http://")
@@ -54,17 +56,21 @@ namespace Home_Assistant_Taskbar_Menu
             haItem.Click += (sender, args) => { System.Diagnostics.Process.Start(url); };
             var aboutItem = new MenuItem {Header = "About HA Taskbar Menu"};
             aboutItem.Click += (sender, args) => { new AboutWindow().ShowDialog(); };
-            var exitItem = new MenuItem {Header = "Exit"};
-            exitItem.Click += (sender, args) => { Close(); };
 
-            return new List<Control>
+            var updateItem = new MenuItem {Header = "Update HA Taskbar Menu"};
+            updateItem.Click += (sender, args) => { System.Diagnostics.Process.Start(latestVersion.url); };
+
+            var exitItem = new MenuItem {Header = "Exit"};
+            exitItem.Click += (sender, args) => { Application.Current.Shutdown(); };
+
+            var list = new List<Control> {new Separator(), editView, haItem, aboutItem};
+            if (!ResourceProvider.IsUpToDate(latestVersion))
             {
-                new Separator(),
-                editView,
-                haItem,
-                aboutItem,
-                exitItem
-            };
+                list.Add(updateItem);
+            }
+
+            list.Add(exitItem);
+            return list;
         }
 
         private void HandleNewEntitiesList(List<Entity> entitiesList)
