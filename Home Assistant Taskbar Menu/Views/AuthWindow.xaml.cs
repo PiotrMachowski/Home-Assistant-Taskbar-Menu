@@ -25,7 +25,7 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void CheckButtonClick(object sender, RoutedEventArgs e)
         {
-            Dispatcher.InvokeAsync(() => CheckConfig(UrlTextBox.Text, TokenTextBox.Text));
+            Dispatcher.InvokeAsync(CheckConfig);
         }
 
         private void SaveButtonClick(object sender, RoutedEventArgs e)
@@ -36,8 +36,9 @@ namespace Home_Assistant_Taskbar_Menu
             Close();
         }
 
-        private async Task CheckConfig(string url, string token)
+        private async Task CheckConfig()
         {
+            string token = TokenTextBox.Text;
             var output = false;
             try
             {

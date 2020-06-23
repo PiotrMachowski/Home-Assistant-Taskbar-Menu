@@ -19,7 +19,20 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         private readonly List<ApiConsumer> _consumers;
         private long _counter;
         private bool _authenticated;
+
+        private bool Authenticated
+        {
+            get => _authenticated;
+            set
+            {
+                _authenticatedListener?.Invoke(value);
+                _authenticated = value;
+            }
+        }
+
+        private Action<bool> _authenticatedListener;
         private readonly List<Action<Entity>> _stateChangeListeners;
+        private readonly List<Action<List<Entity>>> _entitiesListListeners;
 
         public HomeAssistantWebsocketsClient(Configuration configuration)
         {
@@ -29,6 +42,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _timer = new Timer(60 * 1000 * 10);
             _consumers = new List<ApiConsumer>();
             _stateChangeListeners = new List<Action<Entity>>();
+            _entitiesListListeners = new List<Action<List<Entity>>>();
             bool debug = !true;
             if (debug)
             {
@@ -63,32 +77,19 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             });
         }
 
-        private void AuthFlow()
+        public void AddAuthenticationStateListener(Action<bool> handler)
         {
-            _consumers.Add(
-                new ApiConsumer(
-                    msg => (string) JObject.Parse(msg.Text)["type"] == "auth_required",
-                    msg =>
-                    {
-                        Console.WriteLine("AUTH REQUIRED");
-                        _authenticated = false;
-                        Authenticate();
-                    }));
-            _consumers.Add(
-                new ApiConsumer(
-                    msg => (string) JObject.Parse(msg.Text)["type"] == "auth_ok",
-                    msg =>
-                    {
-                        Console.WriteLine("AUTH OK");
-                        _authenticated = true;
-                        SubscribeStateChange();
-                    }));
+            _authenticatedListener = handler;
         }
 
-        private void Authenticate()
+        public void AddStateChangeListener(Action<Entity> handler)
         {
-            var authMessage = $"{{\"type\": \"auth\",\"access_token\": \"{_token}\"}}";
-            _websocketClient.Send(authMessage);
+            _stateChangeListeners.Add(handler);
+        }
+
+        public void AddEntitiesListListener(Action<List<Entity>> handler)
+        {
+            _entitiesListListeners.Add(handler);
         }
 
         public async Task Start()
@@ -100,12 +101,41 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _timer.Enabled = true;
         }
 
+
+        private void AuthFlow()
+        {
+            _consumers.Add(
+                new ApiConsumer(
+                    msg => (string) JObject.Parse(msg.Text)["type"] == "auth_required",
+                    msg =>
+                    {
+                        Console.WriteLine("AUTH REQUIRED");
+                        Authenticated = false;
+                        Authenticate();
+                    }));
+            _consumers.Add(
+                new ApiConsumer(
+                    msg => (string) JObject.Parse(msg.Text)["type"] == "auth_ok",
+                    msg =>
+                    {
+                        Console.WriteLine("AUTH OK");
+                        Authenticated = true;
+                        Task.Run(SubscribeStateChange);
+                        Task.Run(GetStates);
+                    }));
+        }
+
+        private void Authenticate()
+        {
+            var authMessage = $"{{\"type\": \"auth\",\"access_token\": \"{_token}\"}}";
+            _websocketClient.Send(authMessage);
+        }
+
         private async Task SubscribeStateChange()
         {
             Console.WriteLine("SUBSCRIBE STATE CHANGES");
             var id = _counter++;
-            var subscribeMsg =
-                $"{{ \"id\": {id},\"type\": \"subscribe_events\",\"event_type\": \"state_changed\"}}";
+            var subscribeMsg = $"{{ \"id\": {id},\"type\": \"subscribe_events\",\"event_type\": \"state_changed\"}}";
             await CallApi(id, subscribeMsg);
         }
 
@@ -113,33 +143,26 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         {
             Console.Out.WriteLine("PING");
             var id = _counter++;
-            var subscribeMsg =
-                $"{{ \"id\": {id},\"type\": \"ping\"}}";
+            var subscribeMsg = $"{{ \"id\": {id},\"type\": \"ping\"}}";
             await CallApi(id, subscribeMsg);
         }
 
-        public void AddStateChangeListener(Action<Entity> handler)
-        {
-            _stateChangeListeners.Add(handler);
-        }
-
-        public async Task GetStates(Action<List<Entity>> callback)
+        private async Task GetStates()
         {
             Console.WriteLine("GETTING STATES");
             var id = _counter++;
-            var subscribeMsg =
-                $"{{ \"id\": {id},\"type\": \"get_states\"}}";
+            var subscribeMsg = $"{{ \"id\": {id},\"type\": \"get_states\"}}";
             await CallApi(id, subscribeMsg, msg =>
             {
                 List<Entity> states = EntityCreator.CreateFromStateList(msg.Text);
                 states.Sort((o1, o2) => string.Compare(o1.EntityId, o2.EntityId, StringComparison.Ordinal));
-                Task.Run(() => callback.Invoke(states));
+                Task.Run(() => _entitiesListListeners.ForEach(l => l.Invoke(states)));
             });
         }
 
         private async Task CallApi(long id, string message, Action<ResponseMessage> resultHandler = null)
         {
-            while (!_authenticated)
+            while (!Authenticated)
             {
                 await Task.Delay(10);
             }

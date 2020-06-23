@@ -31,7 +31,7 @@ namespace Home_Assistant_Taskbar_Menu
             _stateObjects = new List<Entity>();
             InitializeComponent();
             TaskbarMenuRoot.ItemsSource = Menu;
-            check(configuration);
+            Task.Run(() => { InitConnection(configuration).Wait(); });
         }
 
         private List<Control> CreateDefaultMenuItems(string configurationUrl)
@@ -67,26 +67,21 @@ namespace Home_Assistant_Taskbar_Menu
             };
         }
 
-        private void check(Configuration configuration)
+        private void HandleNewEntitiesList(List<Entity> entitiesList)
         {
-            Task.Run(() => { CheckIt(configuration).Wait(); });
+            UpdateMyStateObjects(entitiesList);
+            Console.WriteLine($"RECEIVED SUPPORTED STATES: {entitiesList.Count}");
+            entitiesList.ForEach(c => { Console.WriteLine($"   {c.EntityId}: {c.State}"); });
+            Dispatcher.Invoke(() => UpdateTree());
         }
 
-        private async Task CheckIt(Configuration configuration)
+        private async Task InitConnection(Configuration configuration)
         {
-            HomeAssistantWebsocketsClient homeAssistantWebsocketClient =
-                new HomeAssistantWebsocketsClient(configuration);
-            HaClientContext.HomeAssistantWebsocketClient = homeAssistantWebsocketClient;
+            HaClientContext.HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(configuration);
             await HaClientContext.Start();
             HaClientContext.AddStateChangeListener(UpdateState);
-            await Task.Delay(1000);
-            await HaClientContext.GetStates(s =>
-            {
-                UpdateMyStateObjects(s);
-                Console.WriteLine($"RECEIVED STATES: {s.Count}");
-                s.ForEach(c => { Console.WriteLine($"   {c.EntityId}: {c.State}"); });
-                Dispatcher.Invoke(UpdateTree);
-            });
+            HaClientContext.AddEntitiesListListener(HandleNewEntitiesList);
+            HaClientContext.AddAuthenticationStateListener(auth => Dispatcher.Invoke(() => UpdateTree(auth)));
         }
 
         private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
@@ -146,10 +141,18 @@ namespace Home_Assistant_Taskbar_Menu
             }
         }
 
-        private void UpdateTree()
+        private void UpdateTree(bool authenticated = true)
         {
             Menu.Clear();
-            CreateStructure(_stateObjects, _viewConfiguration).ForEach(Menu.Add);
+            if (authenticated)
+            {
+                CreateStructure(_stateObjects, _viewConfiguration).ForEach(Menu.Add);
+            }
+            else
+            {
+                Menu.Add(new MenuItem {Header = "Not connected", IsEnabled = false});
+            }
+
             _defaultMenuItems.ForEach(Menu.Add);
         }
     }

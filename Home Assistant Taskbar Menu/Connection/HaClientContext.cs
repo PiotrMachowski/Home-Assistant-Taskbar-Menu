@@ -21,11 +21,16 @@ namespace Home_Assistant_Taskbar_Menu
             HomeAssistantWebsocketClient.AddStateChangeListener(listener);
         }
 
-        public static async Task GetStates(Action<List<Entity>> callback)
+        public static void AddAuthenticationStateListener(Action<bool> listener)
         {
-            await HomeAssistantWebsocketClient.GetStates(callback);
+            HomeAssistantWebsocketClient.AddAuthenticationStateListener(listener);
         }
 
+        public static void AddEntitiesListListener(Action<List<Entity>> listener)
+        {
+            HomeAssistantWebsocketClient.AddEntitiesListListener(listener);
+        }
+        
         public static void CallService(Dispatcher dispatcher, Entity stateObject, string service,
             params Tuple<string, object>[] data)
         {
