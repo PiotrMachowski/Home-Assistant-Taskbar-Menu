@@ -1,0 +1,72 @@
+﻿<Window x:Class="Home_Assistant_Taskbar_Menu.Views.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Home_Assistant_Taskbar_Menu.Views"
+        mc:Ignorable="d"
+        Title="About"
+        Icon="../Images/small.ico"
+        WindowStartupLocation="CenterScreen"
+        Height="500" Width="500" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Image Source="../Images/small.ico" Margin="20" Grid.Row="0" />
+        <StackPanel Grid.Row="1">
+            <Label Name="NameAndVersionLabel" Content="Home Assistant Taskbar Menu v1.0.0.0" FontSize="24"
+                   HorizontalAlignment="Center" />
+            <Label Name="CopyrightInfoLabel" Content="Copyright Piotr Machowski" FontSize="20"
+                   HorizontalAlignment="Center" />
+            <TextBlock FontSize="16" HorizontalAlignment="Center">
+                View code and documentation on
+                <Hyperlink NavigateUri="https://github.com/PiotrMachowski" Name="RepoHyperlink"
+                           RequestNavigate="OpenHyperlink">
+                    GitHub
+                </Hyperlink>.
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center" Margin="0,50,0,0">
+                This application uses following libraries:
+            </TextBlock>
+            <BulletDecorator HorizontalAlignment="Center">
+                <BulletDecorator.Bullet>
+                    <Ellipse Height="5" Width="5" Fill="Black" />
+                </BulletDecorator.Bullet>
+                <TextBlock Margin="5,0,0,0">
+                    <Hyperlink NavigateUri="https://github.com/Fody/Costura" RequestNavigate="OpenHyperlink">Costura.Fody</Hyperlink>
+                </TextBlock>
+            </BulletDecorator>
+            <BulletDecorator HorizontalAlignment="Center">
+                <BulletDecorator.Bullet>
+                    <Ellipse Height="5" Width="5" Fill="Black" />
+                </BulletDecorator.Bullet>
+                <TextBlock Margin="5,0,0,0">
+                    <Hyperlink NavigateUri="http://www.hardcodet.net/wpf-notifyicon" RequestNavigate="OpenHyperlink">
+                        Hardcodet.NotifyIcon.Wpf
+                    </Hyperlink>
+                </TextBlock>
+            </BulletDecorator>
+            <BulletDecorator HorizontalAlignment="Center">
+                <BulletDecorator.Bullet>
+                    <Ellipse Height="5" Width="5" Fill="Black" />
+                </BulletDecorator.Bullet>
+                <TextBlock Margin="5,0,0,0">
+                    <Hyperlink NavigateUri="https://www.newtonsoft.com/json" RequestNavigate="OpenHyperlink">Newtonsoft.Json</Hyperlink>
+                </TextBlock>
+            </BulletDecorator>
+            <BulletDecorator HorizontalAlignment="Center">
+                <BulletDecorator.Bullet>
+                    <Ellipse Height="5" Width="5" Fill="Black" />
+                </BulletDecorator.Bullet>
+                <TextBlock Margin="5,0,0,0">
+                    <Hyperlink NavigateUri="https://github.com/Marfusios/websocket-client"
+                               RequestNavigate="OpenHyperlink">
+                        Websocket.Client
+                    </Hyperlink>
+                </TextBlock>
+            </BulletDecorator>
+        </StackPanel>
+    </Grid>
+</Window>

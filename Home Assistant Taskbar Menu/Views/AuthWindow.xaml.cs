@@ -32,6 +32,7 @@ namespace Home_Assistant_Taskbar_Menu
         {
             Configuration configuration = new Configuration(GetUrl(), TokenTextBox.Text);
             Storage.Save(configuration);
+            new MainWindow(configuration, Storage.RestoreViewConfiguration()).Show();
             Close();
         }
 

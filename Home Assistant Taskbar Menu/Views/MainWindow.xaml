@@ -9,7 +9,6 @@
         Title="MainWindow"
         Visibility="Hidden" Width="1" Height="1">
     <tb:TaskbarIcon
-        x:Name="TaskbarIcon"
         IconSource="/Images/small.ico"
         ToolTip="Home Assistant"
         MenuActivation="LeftOrRightClick">

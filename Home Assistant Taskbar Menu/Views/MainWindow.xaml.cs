@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
+using Home_Assistant_Taskbar_Menu.Views;
 
 namespace Home_Assistant_Taskbar_Menu
 {
@@ -51,7 +52,8 @@ namespace Home_Assistant_Taskbar_Menu
             };
             var haItem = new MenuItem {Header = "Open HA in Browser"};
             haItem.Click += (sender, args) => { System.Diagnostics.Process.Start(url); };
-
+            var aboutItem = new MenuItem {Header = "About HA Taskbar Menu"};
+            aboutItem.Click += (sender, args) => { new AboutWindow().ShowDialog(); };
             var exitItem = new MenuItem {Header = "Exit"};
             exitItem.Click += (sender, args) => { Close(); };
 
@@ -60,6 +62,7 @@ namespace Home_Assistant_Taskbar_Menu
                 new Separator(),
                 editView,
                 haItem,
+                aboutItem,
                 exitItem
             };
         }
@@ -122,7 +125,7 @@ namespace Home_Assistant_Taskbar_Menu
             _stateObjects.Clear();
             _stateObjects.AddRange(state);
         }
-        
+
         private void UpdateState(Entity changedState)
         {
             Console.WriteLine($"STATE UPDATED: {changedState.EntityId} => {changedState.State}");

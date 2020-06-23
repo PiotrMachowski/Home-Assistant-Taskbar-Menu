@@ -29,6 +29,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <SupportUrl>https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu</SupportUrl>
+    <TargetCulture>en</TargetCulture>
     <ProductName>Home Assistant Taskbar Menu</ProductName>
     <PublisherName>Piotr Machowski</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
@@ -150,6 +151,9 @@
     <Compile Include="Entities\Script.cs" />
     <Compile Include="Entities\Vacuum.cs" />
     <Compile Include="Utils\EntityCreator.cs" />
+    <Compile Include="Views\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
@@ -163,6 +167,10 @@
     <Compile Include="Views\ViewConfigurationWindow.xaml.cs">
       <DependentUpon>ViewConfigurationWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
