@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Light : MyStateObject
+    public class Light : Entity
     {
         public const string DomainName = "light";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};

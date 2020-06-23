@@ -20,7 +20,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             ServiceData = serviceData;
         }
 
-        public HomeAssistantServiceCallData(string service, MyStateObject stateObject,
+        public HomeAssistantServiceCallData(string service, Entity stateObject,
             params Tuple<string, object>[] data)
         {
             var serviceData = new Dictionary<string, object>

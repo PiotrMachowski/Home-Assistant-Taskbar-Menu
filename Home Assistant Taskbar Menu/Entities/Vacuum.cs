@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Vacuum : MyStateObject
+    public class Vacuum : Entity
     {
         public const string DomainName = "vacuum";
 

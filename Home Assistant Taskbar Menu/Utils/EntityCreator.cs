@@ -28,7 +28,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         };
 
 
-        public static MyStateObject Create(JToken jToken)
+        public static Entity Create(JToken jToken)
         {
             var domain = jToken["entity_id"].ToString().Split('.')[0];
             JToken newState = jToken;
@@ -65,7 +65,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             return null;
         }
 
-        public static MyStateObject CreateFromChangedState(string json)
+        public static Entity CreateFromChangedState(string json)
         {
             JToken jToken = JObject.Parse(json)["event"]?["data"];
             string entityId = jToken?["entity_id"].ToString();
@@ -80,7 +80,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             return null;
         }
 
-        public static List<MyStateObject> CreateFromStateList(string json)
+        public static List<Entity> CreateFromStateList(string json)
         {
             return JObject.Parse(json)["result"].Children<JToken>()
                 .Select(jtoken => Create(jtoken))
@@ -88,7 +88,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
                 .ToList();
         }
 
-        public static void ConvertToMenuItem(string json, string name, Action<MyStateObject> saver,
+        public static void ConvertToMenuItem(string json, string name, Action<Entity> saver,
             Dispatcher dispatcher)
         {
             JToken jToken = JObject.Parse(json)["event"]?["data"];

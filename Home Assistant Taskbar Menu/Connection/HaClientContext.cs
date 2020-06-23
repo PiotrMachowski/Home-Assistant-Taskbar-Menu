@@ -16,17 +16,17 @@ namespace Home_Assistant_Taskbar_Menu
             await HomeAssistantWebsocketClient.Start();
         }
 
-        public static void AddStateChangeListener(Action<MyStateObject> listener)
+        public static void AddStateChangeListener(Action<Entity> listener)
         {
             HomeAssistantWebsocketClient.AddStateChangeListener(listener);
         }
 
-        public static async Task GetStates(Action<List<MyStateObject>> callback)
+        public static async Task GetStates(Action<List<Entity>> callback)
         {
             await HomeAssistantWebsocketClient.GetStates(callback);
         }
 
-        public static void CallService(Dispatcher dispatcher, MyStateObject stateObject, string service,
+        public static void CallService(Dispatcher dispatcher, Entity stateObject, string service,
             params Tuple<string, object>[] data)
         {
             dispatcher.Invoke(() =>

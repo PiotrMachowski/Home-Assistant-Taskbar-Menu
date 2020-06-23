@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Lock : MyStateObject
+    public class Lock : Entity
     {
         public const string DomainName = "lock";
         private static readonly List<string> OffStatesList = new List<string> {States.Closed, States.Unavailable};

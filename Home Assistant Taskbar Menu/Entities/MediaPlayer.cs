@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class MediaPlayer : MyStateObject
+    public class MediaPlayer : Entity
     {
         public const string DomainName = "media_player";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};

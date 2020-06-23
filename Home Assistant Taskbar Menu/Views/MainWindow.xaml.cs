@@ -18,7 +18,7 @@ namespace Home_Assistant_Taskbar_Menu
     {
         private ViewConfiguration _viewConfiguration;
         private readonly List<Control> _defaultMenuItems;
-        private readonly List<MyStateObject> _stateObjects;
+        private readonly List<Entity> _stateObjects;
 
         public ObservableCollection<Control> Menu { get; set; }
 
@@ -27,7 +27,7 @@ namespace Home_Assistant_Taskbar_Menu
             _viewConfiguration = viewConfiguration;
             _defaultMenuItems = CreateDefaultMenuItems(configuration.Url);
             Menu = new ObservableCollection<Control>();
-            _stateObjects = new List<MyStateObject>();
+            _stateObjects = new List<Entity>();
             InitializeComponent();
             TaskbarMenuRoot.ItemsSource = Menu;
             check(configuration);
@@ -86,14 +86,14 @@ namespace Home_Assistant_Taskbar_Menu
             });
         }
 
-        private List<Control> CreateStructure(List<MyStateObject> stateObjects, ViewConfiguration viewConfiguration)
+        private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             return viewConfiguration.Children.Count == 0
                 ? stateObjects.Select(e => e.ToMenuItem(Dispatcher, null)).ToList()
                 : viewConfiguration.Children.Select(c => MapToControl(stateObjects, c)).ToList();
         }
 
-        private Control MapToControl(List<MyStateObject> stateObjects, ViewConfiguration viewConfiguration)
+        private Control MapToControl(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             switch (viewConfiguration.NodeType)
             {
@@ -117,21 +117,13 @@ namespace Home_Assistant_Taskbar_Menu
             }
         }
 
-        private void UpdateMyStateObjects(List<MyStateObject> state)
+        private void UpdateMyStateObjects(List<Entity> state)
         {
             _stateObjects.Clear();
             _stateObjects.AddRange(state);
-            // _stateObjects.AddRange(state.Where(EntityCreator.IsSupported));
         }
-
-        // private List<EntityMenuItem> ConvertToMenuItems(List<MyStateObject> stateObjects, string name = null)
-        // {
-        // List<EntityMenuItem> items = new List<EntityMenuItem>();
-        // stateObjects.ForEach(s => EntityCreator.ConvertToMenuItem(s, name, items.Add, Dispatcher));
-        // return items;
-        // }
-
-        private void UpdateState(MyStateObject changedState)
+        
+        private void UpdateState(Entity changedState)
         {
             Console.WriteLine($"STATE UPDATED: {changedState.EntityId} => {changedState.State}");
             if (_viewConfiguration.ContainsEntity(changedState) ||

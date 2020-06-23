@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Switch : MyStateObject
+    public class Switch : Entity
     {
         public const string DomainName = "switch";
 

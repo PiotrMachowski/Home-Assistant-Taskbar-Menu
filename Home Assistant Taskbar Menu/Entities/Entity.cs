@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public abstract class MyStateObject
+    public abstract class Entity
     {
         [JsonProperty("entity_id")] public string EntityId { get; set; }
 

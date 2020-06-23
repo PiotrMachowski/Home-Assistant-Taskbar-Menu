@@ -14,7 +14,7 @@ namespace Home_Assistant_Taskbar_Menu
 
         public ViewConfiguration ViewConfiguration { get; set; }
 
-        public ViewConfigurationDialog(List<MyStateObject> stateObjects)
+        public ViewConfigurationDialog(List<Entity> stateObjects)
         {
             InitializeComponent();
             stateObjects.ForEach(s => EntityIdComboBox.Items.Add(s.EntityId));

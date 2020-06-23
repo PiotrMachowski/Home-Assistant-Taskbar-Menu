@@ -144,7 +144,7 @@
     <Compile Include="Entities\Light.cs" />
     <Compile Include="Entities\Lock.cs" />
     <Compile Include="Entities\MediaPlayer.cs" />
-    <Compile Include="Entities\MyStateObject.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Scene.cs" />
     <Compile Include="Entities\Switch.cs" />
     <Compile Include="Entities\Script.cs" />

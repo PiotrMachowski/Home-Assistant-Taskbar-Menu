@@ -14,10 +14,10 @@ namespace Home_Assistant_Taskbar_Menu
     /// </summary>
     public partial class ViewConfigurationWindow : Window
     {
-        private readonly List<MyStateObject> _stateObjects;
+        private readonly List<Entity> _stateObjects;
         public ViewConfiguration ViewConfiguration { get; set; }
 
-        public ViewConfigurationWindow(List<MyStateObject> stateObjects, ViewConfiguration viewConfiguration)
+        public ViewConfigurationWindow(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             _stateObjects = stateObjects;
             InitializeComponent();

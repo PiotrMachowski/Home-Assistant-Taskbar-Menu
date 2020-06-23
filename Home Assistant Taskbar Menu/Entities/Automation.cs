@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Automation : MyStateObject
+    public class Automation : Entity
     {
         public const string DomainName = "automation";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};

@@ -14,7 +14,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 
         public List<ViewConfiguration> Children { get; set; } = new List<ViewConfiguration>();
 
-        public bool ContainsEntity(MyStateObject stateObject)
+        public bool ContainsEntity(Entity stateObject)
         {
             return stateObject.EntityId == EntityId || Children.Any(c => c.ContainsEntity(stateObject));
         }

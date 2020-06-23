@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Script : MyStateObject
+    public class Script : Entity
     {
         public const string DomainName = "script";
 

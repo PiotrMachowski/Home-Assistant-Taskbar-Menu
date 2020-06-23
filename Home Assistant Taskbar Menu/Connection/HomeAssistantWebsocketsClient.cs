@@ -19,7 +19,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         private readonly List<ApiConsumer> _consumers;
         private long _counter;
         private bool _authenticated;
-        private readonly List<Action<MyStateObject>> _stateChangeListeners;
+        private readonly List<Action<Entity>> _stateChangeListeners;
 
         public HomeAssistantWebsocketsClient(Configuration configuration)
         {
@@ -28,7 +28,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _websocketClient = new WebsocketClient(new Uri(configuration.Url));
             _timer = new Timer(60 * 1000 * 10);
             _consumers = new List<ApiConsumer>();
-            _stateChangeListeners = new List<Action<MyStateObject>>();
+            _stateChangeListeners = new List<Action<Entity>>();
             bool debug = !true;
             if (debug)
             {
@@ -51,10 +51,10 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     },
                     msg =>
                     {
-                        MyStateObject myStateObject = EntityCreator.CreateFromChangedState(msg.Text);
-                        if (myStateObject != null)
+                        Entity entity = EntityCreator.CreateFromChangedState(msg.Text);
+                        if (entity != null)
                         {
-                            _stateChangeListeners.ForEach(a => Task.Run(() => a.Invoke(myStateObject)));
+                            _stateChangeListeners.ForEach(a => Task.Run(() => a.Invoke(entity)));
                         }
                     }));
             _websocketClient.ReconnectionHappened.Subscribe((recInfo) =>
@@ -118,12 +118,12 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             await CallApi(id, subscribeMsg);
         }
 
-        public void AddStateChangeListener(Action<MyStateObject> handler)
+        public void AddStateChangeListener(Action<Entity> handler)
         {
             _stateChangeListeners.Add(handler);
         }
 
-        public async Task GetStates(Action<List<MyStateObject>> callback)
+        public async Task GetStates(Action<List<Entity>> callback)
         {
             Console.WriteLine("GETTING STATES");
             var id = _counter++;
@@ -131,7 +131,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                 $"{{ \"id\": {id},\"type\": \"get_states\"}}";
             await CallApi(id, subscribeMsg, msg =>
             {
-                List<MyStateObject> states = EntityCreator.CreateFromStateList(msg.Text);
+                List<Entity> states = EntityCreator.CreateFromStateList(msg.Text);
                 states.Sort((o1, o2) => string.Compare(o1.EntityId, o2.EntityId, StringComparison.Ordinal));
                 Task.Run(() => callback.Invoke(states));
             });
