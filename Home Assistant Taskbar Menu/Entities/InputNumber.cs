@@ -12,15 +12,16 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return DomainName;
         }
 
-        public override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
             var root = new MenuItem
             {
                 Header = GetName(name),
-                StaysOpenOnClick = true
+                StaysOpenOnClick = true,
+                IsEnabled = IsAvailable()
             };
-            var value = double.Parse(State);
             var min = GetDoubleAttribute("min");
+            var value = ParseDouble(State);
             var max = GetDoubleAttribute("max");
             var step = GetDoubleAttribute("step");
             root.Items.Add(CreateSlider(dispatcher, min, max, value, "set_value", "Set Value", "value", step));

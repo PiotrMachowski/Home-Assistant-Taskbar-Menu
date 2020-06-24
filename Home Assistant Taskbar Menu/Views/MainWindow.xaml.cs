@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -53,12 +54,12 @@ namespace Home_Assistant_Taskbar_Menu
                 }
             };
             var haItem = new MenuItem {Header = "Open HA in Browser"};
-            haItem.Click += (sender, args) => { System.Diagnostics.Process.Start(url); };
+            haItem.Click += (sender, args) => { Process.Start(url); };
             var aboutItem = new MenuItem {Header = "About HA Taskbar Menu"};
             aboutItem.Click += (sender, args) => { new AboutWindow().ShowDialog(); };
 
             var updateItem = new MenuItem {Header = "Update HA Taskbar Menu"};
-            updateItem.Click += (sender, args) => { System.Diagnostics.Process.Start(latestVersion.url); };
+            updateItem.Click += (sender, args) => { Process.Start(latestVersion.url); };
 
             var exitItem = new MenuItem {Header = "Exit"};
             exitItem.Click += (sender, args) => { Application.Current.Shutdown(); };
@@ -93,7 +94,7 @@ namespace Home_Assistant_Taskbar_Menu
         private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             return viewConfiguration.Children.Count == 0
-                ? stateObjects.Select(e => e.ToMenuItem(Dispatcher, null)).ToList()
+                ? stateObjects.Select(e => e.ToMenuItemSafe(Dispatcher, null)).ToList()
                 : viewConfiguration.Children.Select(c => MapToControl(stateObjects, c)).ToList();
         }
 
@@ -107,7 +108,7 @@ namespace Home_Assistant_Taskbar_Menu
                     var stateObject = stateObjects.Find(e => e.EntityId.Equals(viewConfiguration.EntityId));
                     return stateObject == null
                         ? new MenuItem {Header = viewConfiguration.EntityId}
-                        : stateObject.ToMenuItem(Dispatcher, viewConfiguration.Name);
+                        : stateObject.ToMenuItemSafe(Dispatcher, viewConfiguration.Name);
                 case ViewConfiguration.Type.Folder:
                     var node = new MenuItem
                     {

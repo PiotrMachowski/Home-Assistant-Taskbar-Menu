@@ -13,12 +13,13 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return DomainName;
         }
 
-        public override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
             var root = new MenuItem
             {
                 Header = GetName(name),
-                StaysOpenOnClick = true
+                StaysOpenOnClick = true,
+                IsEnabled = IsAvailable()
             };
             GetListAttribute("options").ForEach(option =>
                 root.Items.Add(CreateMenuItem(dispatcher, "select_option", option, State == option,

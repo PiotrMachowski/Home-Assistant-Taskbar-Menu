@@ -71,7 +71,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                             _stateChangeListeners.ForEach(a => Task.Run(() => a.Invoke(entity)));
                         }
                     }));
-            _websocketClient.ReconnectionHappened.Subscribe((recInfo) =>
+            _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
             {
                 Console.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}");
             });

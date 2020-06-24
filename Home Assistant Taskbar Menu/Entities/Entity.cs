@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -29,12 +30,22 @@ namespace Home_Assistant_Taskbar_Menu.Entities
 
         protected int GetIntAttribute(string name, int defaultValue = 0)
         {
-            return int.Parse(GetAttribute(name) ?? defaultValue.ToString());
+            return ParseInt(GetAttribute(name));
         }
 
         protected double GetDoubleAttribute(string name)
         {
-            return double.Parse(GetAttribute(name) ?? "0");
+            return ParseDouble(GetAttribute(name));
+        }
+
+        protected double ParseDouble(string value)
+        {
+            return double.Parse(value?.Replace(",", ".") ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture);
+        }
+
+        protected int ParseInt(string value)
+        {
+            return int.Parse(value?.Replace(",", ".") ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         protected List<string> GetListAttribute(string name)
@@ -47,6 +58,11 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         public bool IsOn()
         {
             return !OffStates().Contains(State);
+        }
+
+        public bool IsAvailable()
+        {
+            return State != States.Unavailable;
         }
 
         public string GetName(string nameOverride)
@@ -82,8 +98,19 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 .ToList();
         }
 
+        public Control ToMenuItemSafe(Dispatcher dispatcher, string name)
+        {
+            try
+            {
+                return ToMenuItem(dispatcher, name);
+            }
+            catch (Exception)
+            {
+                return new MenuItem {Header = $"ERROR: {EntityId.Replace("_", "__")}", IsEnabled = false};
+            }
+        }
 
-        public abstract Control ToMenuItem(Dispatcher dispatcher, string name);
+        protected abstract Control ToMenuItem(Dispatcher dispatcher, string name);
 
         protected bool IsSupported(int supportedFeature)
         {
@@ -105,7 +132,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         }
 
         protected MenuItem CreateMenuItem(Dispatcher dispatcher, string service, string header, bool isChecked = false,
-            string toolTip = null, params Tuple<string, object>[] data)
+            bool isEnabled = true, string toolTip = null, params Tuple<string, object>[] data)
         {
             var serviceItem = new MenuItem {Header = header, ToolTip = toolTip, StaysOpenOnClick = true};
             if (isChecked)

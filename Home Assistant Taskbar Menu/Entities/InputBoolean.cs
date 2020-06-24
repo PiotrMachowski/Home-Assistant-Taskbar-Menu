@@ -19,9 +19,9 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return OffStatesList;
         }
 
-        public override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
-            return CreateMenuItem(dispatcher, "toggle", GetName(name), IsOn());
+            return CreateMenuItem(dispatcher, "toggle", GetName(name), IsOn(), IsAvailable());
         }
     }
 }

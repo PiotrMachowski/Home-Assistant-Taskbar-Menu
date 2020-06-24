@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Threading;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Newtonsoft.Json.Linq;
 
@@ -86,6 +85,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
                 Console.WriteLine($"ERROR CREATING MENU ITEM FOR: {entityId}");
                 //ignored
             }
+
             return null;
         }
 

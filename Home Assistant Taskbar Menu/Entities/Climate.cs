@@ -24,10 +24,11 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return SupportedFeatures.All;
         }
 
-        public override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
             var isOn = IsOn();
-            return CreateMenuItem(dispatcher, isOn ? "turn_off" : "turn_on", GetName(name), isOn);
+            return CreateMenuItem(dispatcher, isOn ? "turn_off" : "turn_on", GetName(name), isOn,
+                IsAvailable());
         }
 
         private static class SupportedFeatures

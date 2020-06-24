@@ -21,17 +21,19 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return OffStatesList;
         }
 
-        public override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
             var root = new MenuItem
             {
                 Header = GetName(name),
-                StaysOpenOnClick = true
+                StaysOpenOnClick = true,
+                IsEnabled = IsAvailable()
             };
             if (IsOn())
             {
-                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+                root.Icon = new PackIcon {Kind = PackIconKind.Tick};
             }
+
             new List<Tuple<string, string>>
             {
                 Tuple.Create("turn_on", "Turn On"),
