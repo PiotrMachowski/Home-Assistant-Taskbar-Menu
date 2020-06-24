@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
     public class Fan : Entity
     {
         public const string DomainName = "fan";
-        private static readonly List<string> OffStatesList = new List<string> {States.Closed, States.Unavailable};
+        private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};
 
         public override string Domain()
         {
@@ -30,9 +31,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             var root = new MenuItem
             {
                 Header = GetName(name),
-                IsChecked = IsOn(),
-                ToolTip = EntityId
+                StaysOpenOnClick = true
             };
+            if (IsOn())
+            {
+                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+            }
             var features = GetSupportedFeatures();
             if (features.Count == 0)
             {
@@ -45,7 +49,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 if (features.Contains(SupportedFeatures.SetSpeed))
                 {
                     var currentSpeed = GetAttribute("speed");
-                    var speedRootItem = new MenuItem {Header = "Set Speed"};
+                    var speedRootItem = new MenuItem {Header = "Set Speed", StaysOpenOnClick = true };
                     GetListAttribute("speed_list")
                         .ForEach(speedValue =>
                             speedRootItem.Items.Add(
@@ -64,7 +68,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 if (features.Contains(SupportedFeatures.Direction))
                 {
                     var currentDirection = GetAttribute("speed");
-                    var directionsItem = new MenuItem {Header = "Set Direction"};
+                    var directionsItem = new MenuItem {Header = "Set Direction", StaysOpenOnClick = true };
                     new List<Tuple<string, string>>
                             {Tuple.Create("forward", "Forward"), Tuple.Create("reverse", "Reverse")}
                         .ForEach(t =>

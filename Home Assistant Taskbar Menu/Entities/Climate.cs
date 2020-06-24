@@ -27,7 +27,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         public override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
             var isOn = IsOn();
-            return CreateMenuItem(dispatcher, isOn ? "turn_off" : "turn_on", GetName(name), isOn, EntityId);
+            return CreateMenuItem(dispatcher, isOn ? "turn_off" : "turn_on", GetName(name), isOn);
         }
 
         private static class SupportedFeatures

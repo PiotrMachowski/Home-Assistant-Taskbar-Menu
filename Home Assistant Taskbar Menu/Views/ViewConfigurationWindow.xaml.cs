@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
+using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 
 namespace Home_Assistant_Taskbar_Menu
@@ -23,6 +26,12 @@ namespace Home_Assistant_Taskbar_Menu
             InitializeComponent();
             ViewConfiguration = viewConfiguration;
             GenerateTree();
+            SizeChanged += (o, args) =>
+            {
+                MaximizeMinimizeIcon.Kind = WindowState == WindowState.Maximized
+                    ? PackIconKind.WindowMaximize
+                    : PackIconKind.WindowRestore;
+            };
         }
 
         private void GenerateTree()
@@ -74,7 +83,7 @@ namespace Home_Assistant_Taskbar_Menu
                 case ViewConfiguration.Type.Separator:
                     var separatorRow = new TreeViewItem
                     {
-                        Header = "--------------",
+                        Header = "------------------------------------------",
                         ContextMenu = new ContextMenu
                         {
                             Placement = PlacementMode.MousePoint,
@@ -89,10 +98,11 @@ namespace Home_Assistant_Taskbar_Menu
                     root.Items.Add(separatorRow);
                     break;
                 case ViewConfiguration.Type.Entity:
+                    var e = _stateObjects.Find(s => s.EntityId == viewConfiguration.EntityId);
                     var header = $"{viewConfiguration.Name} ({viewConfiguration.EntityId})";
                     if (string.IsNullOrEmpty(viewConfiguration.Name))
                     {
-                        header = viewConfiguration.EntityId;
+                        header = e.ToString();
                     }
 
                     var entityRow = new TreeViewItem
@@ -172,6 +182,27 @@ namespace Home_Assistant_Taskbar_Menu
             Console.WriteLine(JsonConvert.SerializeObject(ViewConfiguration));
             Storage.Save(ViewConfiguration);
             DialogResult = true;
+        }
+
+        private void MinimizeButton(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeRestoreButton(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void CloseButton(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
         }
     }
 }

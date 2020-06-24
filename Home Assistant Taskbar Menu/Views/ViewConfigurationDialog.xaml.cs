@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 
@@ -17,7 +18,7 @@ namespace Home_Assistant_Taskbar_Menu
         public ViewConfigurationDialog(List<Entity> stateObjects)
         {
             InitializeComponent();
-            stateObjects.ForEach(s => EntityIdComboBox.Items.Add(s.EntityId));
+            stateObjects.ForEach(s => EntityIdComboBox.Items.Add(s));
             _isEntity = true;
         }
 
@@ -30,11 +31,10 @@ namespace Home_Assistant_Taskbar_Menu
             _isEntity = false;
         }
 
-
         private void Save(object sender, RoutedEventArgs e)
         {
             ViewConfiguration = _isEntity
-                ? ViewConfiguration.Entity(EntityIdComboBox.SelectedItem.ToString(), NameTextBox.Text)
+                ? ViewConfiguration.Entity(((Entity)EntityIdComboBox.SelectedItem).EntityId, NameTextBox.Text)
                 : ViewConfiguration.Folder(NameTextBox.Text);
             DialogResult = true;
         }
@@ -43,6 +43,17 @@ namespace Home_Assistant_Taskbar_Menu
         {
             SaveButton.IsEnabled = !(EntityIdComboBox.SelectedIndex < 0 && _isEntity ||
                                      string.IsNullOrEmpty(NameTextBox.Text) && !_isEntity);
+        }
+
+        private void CloseButton(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
         }
     }
 }

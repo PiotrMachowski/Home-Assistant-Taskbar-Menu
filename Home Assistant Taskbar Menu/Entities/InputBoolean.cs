@@ -21,7 +21,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
 
         public override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
-            return CreateMenuItem(dispatcher, "toggle", GetName(name), IsOn(), EntityId);
+            return CreateMenuItem(dispatcher, "toggle", GetName(name), IsOn());
         }
     }
 }

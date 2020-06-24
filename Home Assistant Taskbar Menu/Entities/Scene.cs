@@ -14,7 +14,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
 
         public override Control ToMenuItem(Dispatcher dispatcher, string name)
         {
-            return CreateMenuItem(dispatcher, "turn_on", GetName(name), toolTip: EntityId);
+            return CreateMenuItem(dispatcher, "turn_on", GetName(name));
         }
     }
 }

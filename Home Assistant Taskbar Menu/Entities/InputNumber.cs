@@ -17,7 +17,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             var root = new MenuItem
             {
                 Header = GetName(name),
-                ToolTip = EntityId
+                StaysOpenOnClick = true
             };
             var value = double.Parse(State);
             var min = GetDoubleAttribute("min");

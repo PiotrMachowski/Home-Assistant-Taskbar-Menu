@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -106,7 +107,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         protected MenuItem CreateMenuItem(Dispatcher dispatcher, string service, string header, bool isChecked = false,
             string toolTip = null, params Tuple<string, object>[] data)
         {
-            var serviceItem = new MenuItem {Header = header, IsChecked = isChecked, ToolTip = toolTip};
+            var serviceItem = new MenuItem {Header = header, ToolTip = toolTip, StaysOpenOnClick = true};
+            if (isChecked)
+            {
+                serviceItem.Icon = new PackIcon {Kind = PackIconKind.Tick};
+            }
+
             serviceItem.Click += (sender, args) => { HaClientContext.CallService(dispatcher, this, service, data); };
             return serviceItem;
         }
@@ -149,6 +155,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             public const string Closed = "closed";
             public const string Idle = "idle";
             public const string Docked = "docked";
+        }
+
+        public override string ToString()
+        {
+            var fName = GetAttribute("friendly_name");
+            return fName != null ? $"{fName} ({EntityId})" : EntityId;
         }
     }
 }

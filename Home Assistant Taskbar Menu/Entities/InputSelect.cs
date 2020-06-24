@@ -18,7 +18,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             var root = new MenuItem
             {
                 Header = GetName(name),
-                ToolTip = EntityId
+                StaysOpenOnClick = true
             };
             GetListAttribute("options").ForEach(option =>
                 root.Items.Add(CreateMenuItem(dispatcher, "select_option", option, State == option,

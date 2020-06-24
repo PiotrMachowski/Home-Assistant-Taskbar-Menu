@@ -1,4 +1,8 @@
 ﻿<Window x:Class="Home_Assistant_Taskbar_Menu.ViewConfigurationWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,22 +12,83 @@
         Title="View Configuration"
         WindowStartupLocation="CenterScreen"
         Icon="../Images/small.ico"
-        Height="450" Width="800">
-    <Grid Margin="3">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="30" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
-        <Button Content="Add Entity to Root" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick" />
-        <Button Content="Add Node to Root" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick" />
-        <Button Content="Add Separator to Root" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2" Click="AddSeparatorClick" />
-        <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="3" Click="Save" />
-    </Grid>
+        Height="450" Width="800"
+        MinHeight="200" MinWidth="400"
+        ResizeMode="CanResize"
+        WindowStyle="SingleBorderWindow">
+    <WindowChrome.WindowChrome>
+        <WindowChrome     
+            CaptionHeight="1"  
+            CornerRadius ="0"
+            ResizeBorderThickness="4"         
+            GlassFrameThickness="0">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Border BorderThickness="0">
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                 Value="Maximized">
+                        <Setter Property="Margin" Value="8"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                 Value="Normal">
+                        <Setter Property="Margin" Value="0"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <DockPanel>
+        <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"
+                                  DockPanel.Dock="Top" Height="30"
+                                  MouseDown="HeaderMouseDown" Padding="2">
+            <Grid>
+                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Image Source="../Images/small.ico" Height="Auto" Margin="2" />
+                    <Label FontSize="16">View Configuration</Label>
+                </StackPanel>
+                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="CloseButton" BorderThickness="0"
+                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                            Width="Auto">
+                        <materialDesign:PackIcon Kind="Close" Width="Auto" Height="Auto" />
+                    </Button>
+                    <Button Name="Maximize" Padding="0" Margin="0,0,10,0" Height="Auto" Click="MaximizeRestoreButton"
+                            BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                            HorizontalAlignment="Right" Width="Auto">
+                            <materialDesign:PackIcon Kind="WindowMaximize" Width="Auto" Height="Auto" Name="MaximizeMinimizeIcon" />
+                    </Button>
+                    <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="MinimizeButton" BorderThickness="0"
+                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                            Width="Auto">
+                        <materialDesign:PackIcon Kind="WindowMinimize" Width="Auto" Height="Auto" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:ColorZone>
+
+        <Grid Margin="3">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
+            <Button Content="Add Entity to Root" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick" />
+            <Button Content="Add Node to Root" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick" />
+            <Button Content="Add Separator to Root" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2"
+                    Click="AddSeparatorClick" />
+            <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="3" Click="Save" />
+        </Grid>
+    </DockPanel>
+        </Border>
 </Window>

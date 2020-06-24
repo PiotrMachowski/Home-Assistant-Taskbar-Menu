@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Home_Assistant_Taskbar_Menu.Utils;
 using Newtonsoft.Json.Linq;
@@ -93,6 +94,17 @@ namespace Home_Assistant_Taskbar_Menu
                     .Replace("https://", "wss://")
                     .Replace("http://", "ws://")
                     + "/api/websocket").Replace("//api", "/api");
+        }
+
+        private void CloseButton(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
         }
     }
 }

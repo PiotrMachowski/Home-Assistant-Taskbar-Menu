@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
@@ -35,9 +36,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             var root = new MenuItem
             {
                 Header = GetName(name),
-                IsChecked = IsOn(),
-                ToolTip = EntityId
+                StaysOpenOnClick = true
             };
+            if (IsOn())
+            {
+                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+            }
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.TurnOn);
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.TurnOff);
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.Play);
@@ -65,7 +69,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             {
                 var currentSource = GetAttribute("source");
                 var sources = GetListAttribute("source_list");
-                var sourcesRoot = new MenuItem {Header = "Source"};
+                var sourcesRoot = new MenuItem {Header = "Source", StaysOpenOnClick = true };
                 sources.ForEach(source => sourcesRoot.Items.Add(CreateMenuItem(dispatcher, "select_source", source,
                     currentSource == source, data: Tuple.Create<string, object>("source", source))));
                 root.Items.Add(sourcesRoot);
@@ -83,7 +87,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             {
                 var currentSoundMode = GetAttribute("sound_mode");
                 var soundModes = GetListAttribute("sound_mode_list");
-                var soundModesRoot = new MenuItem {Header = "Sound Mode"};
+                var soundModesRoot = new MenuItem {Header = "Sound Mode", StaysOpenOnClick = true };
                 soundModes.ForEach(soundMode => soundModesRoot.Items.Add(CreateMenuItem(dispatcher, "select_sound_mode",
                     soundMode, currentSoundMode == soundMode,
                     data: Tuple.Create<string, object>("sound_mode", soundMode))));

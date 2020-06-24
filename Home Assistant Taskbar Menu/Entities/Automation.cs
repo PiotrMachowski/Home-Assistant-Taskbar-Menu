@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
@@ -25,9 +26,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             var root = new MenuItem
             {
                 Header = GetName(name),
-                IsChecked = IsOn(),
-                ToolTip = EntityId
+                StaysOpenOnClick = true
             };
+            if (IsOn())
+            {
+                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+            }
             new List<Tuple<string, string>>
             {
                 Tuple.Create("turn_on", "Turn On"),
