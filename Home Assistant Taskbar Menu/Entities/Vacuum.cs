@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
@@ -40,6 +41,18 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             };
             GetSupportedFeatures()
                 .ForEach(supportedFeature => AddMenuItemIfSupported(dispatcher, root, supportedFeature));
+            if (IsSupported(SupportedFeatures.FanSpeed))
+            {
+                var fanSpeedItem = new MenuItem {Header = "Fan Speed"};
+                var currentFanSpeed = GetAttribute("fan_speed");
+                GetListAttribute("fan_speed_list").ForEach(fanSpeed =>
+                {
+                    fanSpeedItem.Items.Add(CreateMenuItem(dispatcher, "set_fan_speed", fanSpeed, fanSpeed == currentFanSpeed,
+                        data: Tuple.Create<string, object>("fan_speed", fanSpeed)));
+                });
+                root.Items.Add(fanSpeedItem);
+            }
+
             return root;
         }
 
@@ -50,7 +63,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             private const int Pause = 4;
             private const int Stop = 8;
             private const int ReturnHome = 16;
-            private const int FanSpeed = 32;
+            public const int FanSpeed = 32;
             private const int Battery = 64;
             private const int Status = 128;
             private const int SendCommand = 256;

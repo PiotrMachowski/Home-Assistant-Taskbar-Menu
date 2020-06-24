@@ -70,13 +70,20 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             JToken jToken = JObject.Parse(json)["event"]?["data"];
             string entityId = jToken?["entity_id"].ToString();
             var domain = entityId?.Split('.')[0];
-            if (IsSupported(domain))
+            try
             {
-                var new_state = jToken?["new_state"];
-                var myStateObject = Create(new_state);
-                return myStateObject;
+                if (IsSupported(domain))
+                {
+                    var new_state = jToken?["new_state"];
+                    var myStateObject = Create(new_state);
+                    return myStateObject;
+                }
             }
-
+            catch (Exception)
+            {
+                Console.WriteLine($"ERROR CREATING MENU ITEM FOR: {entityId}");
+                //ignored
+            }
             return null;
         }
 
@@ -86,29 +93,6 @@ namespace Home_Assistant_Taskbar_Menu.Utils
                 .Select(jtoken => Create(jtoken))
                 .Where(v => v != null)
                 .ToList();
-        }
-
-        public static void ConvertToMenuItem(string json, string name, Action<Entity> saver,
-            Dispatcher dispatcher)
-        {
-            JToken jToken = JObject.Parse(json)["event"]?["data"];
-            var new_state = jToken?["new_state"];
-            string entityId = jToken?["entity_id"].ToString();
-            var domain = entityId?.Split('.')[0];
-            if (IsSupported(domain))
-            {
-                try
-                {
-                    Console.WriteLine($"CHANGED ENTITY: {entityId}");
-                    var item = Create(new_state);
-                    saver.Invoke(item);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine($"ERROR PROCESSING: {entityId}");
-                    // ignored
-                }
-            }
         }
 
         public static bool IsSupported(string domain)
