@@ -56,6 +56,8 @@ namespace Home_Assistant_Taskbar_Menu.Utils
                     return newState?.ToObject<MediaPlayer>();
                 case Scene.DomainName:
                     return newState?.ToObject<Scene>();
+                case Script.DomainName:
+                    return newState?.ToObject<Script>();
                 case Switch.DomainName:
                     return newState?.ToObject<Switch>();
                 case Vacuum.DomainName:
