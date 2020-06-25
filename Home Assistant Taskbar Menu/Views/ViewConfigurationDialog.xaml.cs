@@ -19,6 +19,7 @@ namespace Home_Assistant_Taskbar_Menu
         {
             InitializeComponent();
             stateObjects.ForEach(s => EntityIdComboBox.Items.Add(s));
+            NameTextBox.ToolTip = "Leave empty to use name retrieved from Home Assistant";
             _isEntity = true;
         }
 

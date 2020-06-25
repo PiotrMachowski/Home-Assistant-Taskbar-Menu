@@ -17,81 +17,85 @@
         ResizeMode="CanResize"
         WindowStyle="SingleBorderWindow">
     <WindowChrome.WindowChrome>
-        <WindowChrome     
-            CaptionHeight="1"  
-            CornerRadius ="0"
-            ResizeBorderThickness="4"         
-            GlassFrameThickness="0">
-        </WindowChrome>
+        <WindowChrome
+            CaptionHeight="1"
+            CornerRadius="0"
+            ResizeBorderThickness="4"
+            GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
     <Border BorderThickness="0">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" 
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
                                  Value="Maximized">
-                        <Setter Property="Margin" Value="8"/>
+                        <Setter Property="Margin" Value="8" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" 
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
                                  Value="Normal">
-                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Margin" Value="0" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </Border.Style>
 
         <DockPanel>
-        <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"
-                                  DockPanel.Dock="Top" Height="30"
-                                  MouseDown="HeaderMouseDown" Padding="2">
-            <Grid>
-                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Image Source="../Images/small.ico" Height="Auto" Margin="2" />
-                    <Label FontSize="16">View Configuration</Label>
-                </StackPanel>
-                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
-                            Orientation="Horizontal" FlowDirection="RightToLeft">
-                    <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="CloseButton" BorderThickness="0"
-                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
-                            Width="Auto">
-                        <materialDesign:PackIcon Kind="Close" Width="Auto" Height="Auto" />
-                    </Button>
-                    <Button Name="Maximize" Padding="0" Margin="0,0,10,0" Height="Auto" Click="MaximizeRestoreButton"
-                            BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                            HorizontalAlignment="Right" Width="Auto">
-                            <materialDesign:PackIcon Kind="WindowMaximize" Width="Auto" Height="Auto" Name="MaximizeMinimizeIcon" />
-                    </Button>
-                    <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="MinimizeButton" BorderThickness="0"
-                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
-                            Width="Auto">
-                        <materialDesign:PackIcon Kind="WindowMinimize" Width="Auto" Height="Auto" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </materialDesign:ColorZone>
+            <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"
+                                      DockPanel.Dock="Top" Height="30"
+                                      MouseDown="HeaderMouseDown" Padding="2">
+                <Grid>
+                    <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" />
+                        <Label FontSize="16">View Configuration</Label>
+                    </StackPanel>
+                    <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="CloseButton" BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                                Width="Auto">
+                            <materialDesign:PackIcon Kind="Close" Width="Auto" Height="Auto" />
+                        </Button>
+                        <Button Name="Maximize" Padding="0" Margin="0,0,10,0" Height="Auto"
+                                Click="MaximizeRestoreButton"
+                                BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                HorizontalAlignment="Right" Width="Auto">
+                            <materialDesign:PackIcon Kind="WindowMaximize" Width="Auto" Height="Auto"
+                                                     Name="MaximizeMinimizeIcon" />
+                        </Button>
+                        <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="MinimizeButton" BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                                Width="Auto">
+                            <materialDesign:PackIcon Kind="WindowMinimize" Width="Auto" Height="Auto" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:ColorZone>
 
-        <Grid Margin="3">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" />
-            <Button Content="Add Entity" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick" />
-            <Button Content="Add Node" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick" />
-            <Button Content="Add Separator" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2"
-                    Click="AddSeparatorClick" />
-            <Button Content="Theme: Light" Margin="3,0,3,0" Grid.Row="1" Grid.Column="3" Name="ChangeThemeButton"
-                    Click="ChangeThemeClick" />
-            <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="4" Click="Save" />
-        </Grid>
-    </DockPanel>
-        </Border>
+            <Grid Margin="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" />
+                <Button Content="Add Entity" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick"
+                        Height="Auto" ToolTip="Add entity to root"/>
+                <Button Content="Add Node" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick"
+                        Height="Auto" ToolTip="Add node to root"/>
+                <Button Content="Add Separator" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2"
+                        Click="AddSeparatorClick" Height="Auto" ToolTip="Add separator to root"/>
+                <Button Content="Theme: Light" Margin="3,0,3,0" Grid.Row="1" Grid.Column="3" Name="ChangeThemeButton"
+                        Click="ChangeThemeClick" Height="Auto" ToolTip="Change will take effect after application restart"/>
+                <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="4" Click="Save"
+                        VerticalContentAlignment="Center" Height="Auto" />
+            </Grid>
+        </DockPanel>
+    </Border>
 </Window>

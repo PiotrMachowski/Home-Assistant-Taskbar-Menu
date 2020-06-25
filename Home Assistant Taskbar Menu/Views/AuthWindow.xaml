@@ -20,7 +20,7 @@
             <Grid>
                 <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
                             Orientation="Horizontal">
-                    <Image Source="../Images/small.ico" Height="Auto" Margin="2" />
+                    <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" />
                     <Label FontSize="16">Authenticate</Label>
                 </StackPanel>
                 <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -34,7 +34,7 @@
             </Grid>
         </materialDesign:ColorZone>
 
-        <Grid>
+        <Grid Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -50,15 +50,15 @@
             <Label Content="URL" Margin="3" VerticalContentAlignment="Center" Grid.ColumnSpan="3" Grid.Row="0"
                    Grid.Column="0" />
             <TextBox Margin="3" TextWrapping="NoWrap" VerticalContentAlignment="Center" Grid.ColumnSpan="3"
-                     Grid.Row="1" Grid.Column="0" Name="UrlTextBox" TextChanged="DataChanged" />
-            <Label Content="Token" Margin="2" VerticalContentAlignment="Center" Grid.ColumnSpan="3" Grid.Row="2"
+                     Grid.Row="1" Grid.Column="0" Name="UrlTextBox" TextChanged="DataChanged" materialDesign:HintAssist.Hint="http://homeassistant.local:8123"/>
+            <Label Content="Long Lived Access Token" Margin="2" VerticalContentAlignment="Center" Grid.ColumnSpan="3" Grid.Row="2"
                    Grid.Column="0" />
             <TextBox Margin="3" TextWrapping="NoWrap" VerticalContentAlignment="Center" Grid.ColumnSpan="3"
-                     Grid.Row="3" Grid.Column="0" Name="TokenTextBox" TextChanged="DataChanged" />
-            <Button Content="Check" Margin="3" Grid.Column="0" Grid.Row="4" Click="CheckButtonClick" Name="CheckButton" />
+                     Grid.Row="3" Grid.Column="0" Name="TokenTextBox" TextChanged="DataChanged" materialDesign:HintAssist.Hint="" />
+            <Button Content="Check" Margin="3" Grid.Column="0" Grid.Row="4" Click="CheckButtonClick" Name="CheckButton"
+                    Height="Auto" />
             <Button Content="Save" Margin="3" Grid.Column="2" Grid.Row="4" Click="SaveButtonClick" IsEnabled="False"
-                    Name="SaveButton" />
-
+                    Name="SaveButton" Height="Auto" />
         </Grid>
     </DockPanel>
 </Window>

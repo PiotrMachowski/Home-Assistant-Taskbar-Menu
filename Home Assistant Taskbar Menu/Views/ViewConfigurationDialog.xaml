@@ -19,7 +19,7 @@
             <Grid>
                 <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
                             Orientation="Horizontal">
-                    <Image Source="../Images/small.ico" Height="Auto" Margin="2" />
+                    <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" />
                     <Label FontSize="16">Add Entry</Label>
                 </StackPanel>
                 <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -32,7 +32,7 @@
                 </StackPanel>
             </Grid>
         </materialDesign:ColorZone>
-        <Grid>
+        <Grid Margin="3">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -40,15 +40,14 @@
                 <RowDefinition Name="RowEntityId2" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Content="Name" Margin="3" Grid.Row="0" VerticalContentAlignment="Center" />
+            <Label Content="Name" Margin="3" Grid.Row="0" VerticalContentAlignment="Center" Grid.ColumnSpan="2" />
             <TextBox Text="" Name="NameTextBox" Margin="3" Grid.Row="1" VerticalContentAlignment="Center"
                      TextChanged="ValidateData" />
             <Label Content="Entity id" Margin="3" Grid.Row="2" VerticalContentAlignment="Center" />
             <ComboBox Name="EntityIdComboBox" Grid.Row="3" Margin="3" VerticalContentAlignment="Center"
                       SelectionChanged="ValidateData" />
-            <Button Name="SaveButton" Click="Save" Content="Save" Grid.Row="4" Margin="3"
-                    VerticalContentAlignment="Center"
-                    IsEnabled="False" />
+            <Button Name="SaveButton" Click="Save" Content="Save" Grid.Row="4" Margin="0"
+                    VerticalContentAlignment="Center" IsEnabled="False" Height="Auto" />
         </Grid>
     </DockPanel>
 </Window>

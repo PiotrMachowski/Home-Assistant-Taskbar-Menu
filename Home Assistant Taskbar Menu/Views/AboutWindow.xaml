@@ -19,12 +19,16 @@
                                   DockPanel.Dock="Top" Height="30"
                                   MouseDown="HeaderMouseDown" Padding="2">
             <Grid>
-                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
-                    <Image Source="../Images/small.ico" Height="Auto" Margin="2" />
+                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" />
                     <Label FontSize="16">About</Label>
                 </StackPanel>
-                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" FlowDirection="RightToLeft">
-                    <Button Padding="0" Height="Auto" Click="CloseButton" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right" Width="Auto">
+                <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button Padding="0" Height="Auto" Click="CloseButton" BorderThickness="0"
+                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                            Width="Auto">
                         <materialDesign:PackIcon Kind="Close" Width="Auto" Height="Auto" />
                     </Button>
                 </StackPanel>
