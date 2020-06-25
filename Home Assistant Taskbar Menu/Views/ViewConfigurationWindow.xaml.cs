@@ -31,6 +31,7 @@ namespace Home_Assistant_Taskbar_Menu
                     ? PackIconKind.WindowMaximize
                     : PackIconKind.WindowRestore;
             };
+            ChangeThemeButton.Content = $"Theme: {viewConfiguration.Name}";
         }
 
         private void GenerateTree()
@@ -202,6 +203,14 @@ namespace Home_Assistant_Taskbar_Menu
         {
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();
+        }
+
+        private void ChangeThemeClick(object sender, RoutedEventArgs e)
+        {
+            ViewConfiguration.Name = ViewConfiguration.Name == ViewConfiguration.LightTheme
+                ? ViewConfiguration.DarkTheme
+                : ViewConfiguration.LightTheme;
+            ChangeThemeButton.Content = $"Theme: {ViewConfiguration.Name}";
         }
     }
 }

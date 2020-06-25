@@ -6,6 +6,9 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 {
     public class ViewConfiguration
     {
+        public const string LightTheme = "Light";
+        public const string DarkTheme = "Dark";
+
         public Type NodeType { get; set; }
 
         public string Name { get; set; }
@@ -24,6 +27,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             return new ViewConfiguration
             {
                 NodeType = Type.Root,
+                Name = "Light",
                 Children = new List<ViewConfiguration>()
             };
         }

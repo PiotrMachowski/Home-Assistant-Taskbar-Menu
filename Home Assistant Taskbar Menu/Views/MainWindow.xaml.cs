@@ -10,6 +10,7 @@ using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 using Home_Assistant_Taskbar_Menu.Views;
+using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu
 {
@@ -18,14 +19,19 @@ namespace Home_Assistant_Taskbar_Menu
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Configuration _configuration;
         private ViewConfiguration _viewConfiguration;
         private readonly List<Control> _defaultMenuItems;
         private readonly List<Entity> _stateObjects;
+
+        private readonly PaletteHelper _paletteHelper = new PaletteHelper();
+
 
         public ObservableCollection<Control> Menu { get; set; }
 
         public MainWindow(Configuration configuration, ViewConfiguration viewConfiguration)
         {
+            _configuration = configuration;
             var latestVersion = ResourceProvider.LatestVersion();
             _viewConfiguration = viewConfiguration;
             _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
@@ -69,7 +75,6 @@ namespace Home_Assistant_Taskbar_Menu
             {
                 list.Add(updateItem);
             }
-
             list.Add(exitItem);
             return list;
         }

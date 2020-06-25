@@ -81,13 +81,16 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
-            <Button Content="Add Entity to Root" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick" />
-            <Button Content="Add Node to Root" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick" />
-            <Button Content="Add Separator to Root" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2"
+            <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" />
+            <Button Content="Add Entity" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick" />
+            <Button Content="Add Node" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick" />
+            <Button Content="Add Separator" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2"
                     Click="AddSeparatorClick" />
-            <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="3" Click="Save" />
+            <Button Content="Theme: Light" Margin="3,0,3,0" Grid.Row="1" Grid.Column="3" Name="ChangeThemeButton"
+                    Click="ChangeThemeClick" />
+            <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="4" Click="Save" />
         </Grid>
     </DockPanel>
         </Border>
