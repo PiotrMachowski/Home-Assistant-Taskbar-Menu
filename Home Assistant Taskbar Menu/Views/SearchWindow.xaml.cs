@@ -74,14 +74,18 @@ namespace Home_Assistant_Taskbar_Menu.Views
                 VerticalAlignment = VerticalAlignment.Center
             };
             Grid.SetColumn(label, 1);
-            Grid grid = new Grid() {Width = double.NaN};
+            Grid grid = new Grid
+            {
+                Width = double.NaN,
+                IsEnabled = entity.IsAvailable(),
+                ContextMenu = new ContextMenu()
+            };
             grid.Children.Add(icon);
             grid.Children.Add(label);
             grid.Children.Add(item);
             grid.ColumnDefinitions.Add(new ColumnDefinition() {Width = new GridLength(30)});
             grid.ColumnDefinitions.Add(new ColumnDefinition());
 
-            grid.ContextMenu = new ContextMenu();
             grid.MouseDown += (sender, args) =>
             {
                 if (grid.ContextMenu.Items.Count == 0)

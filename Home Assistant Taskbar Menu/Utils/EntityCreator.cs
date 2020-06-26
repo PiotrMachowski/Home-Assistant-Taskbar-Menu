@@ -82,7 +82,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             }
             catch (Exception)
             {
-                Console.WriteLine($"ERROR CREATING MENU ITEM FOR: {entityId}");
+                ConsoleWriter.WriteLine($"ERROR CREATING MENU ITEM FOR: {entityId}", ConsoleColor.Red);
                 //ignored
             }
 

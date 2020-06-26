@@ -12,6 +12,7 @@
         WindowStyle="None"
         Icon="../Images/small.ico"
         ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
         Title="Search" Height="400" Width="400" KeyDown="EscapeListener">
     <DockPanel>
         <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"

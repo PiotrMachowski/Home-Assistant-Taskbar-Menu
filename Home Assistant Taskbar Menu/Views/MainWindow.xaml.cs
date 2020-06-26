@@ -11,7 +11,6 @@ using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 using Home_Assistant_Taskbar_Menu.Views;
-using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu
 {
@@ -20,19 +19,18 @@ namespace Home_Assistant_Taskbar_Menu
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Configuration _configuration;
+        private AboutWindow _aboutWindow;
+        private SearchWindow _searchWindow;
+        private ViewConfigurationWindow _viewConfigurationWindow;
+
         private ViewConfiguration _viewConfiguration;
         private readonly List<Control> _defaultMenuItems;
         private readonly List<Entity> _stateObjects;
-
-        private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-
 
         public ObservableCollection<UIElement> Menu { get; set; }
 
         public MainWindow(Configuration configuration, ViewConfiguration viewConfiguration)
         {
-            _configuration = configuration;
             var latestVersion = ResourceProvider.LatestVersion();
             _viewConfiguration = viewConfiguration;
             _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
@@ -52,18 +50,24 @@ namespace Home_Assistant_Taskbar_Menu
             var editView = new MenuItem {Header = "Edit view configuration"};
             editView.Click += (sender, args) =>
             {
-                var viewConfigurationWindow = new ViewConfigurationWindow(_stateObjects, _viewConfiguration);
-                var response = viewConfigurationWindow.ShowDialog();
+                _viewConfigurationWindow?.Close();
+                _viewConfigurationWindow = new ViewConfigurationWindow(_stateObjects, _viewConfiguration);
+                var response = _viewConfigurationWindow.ShowDialog();
                 if (response == true)
                 {
-                    _viewConfiguration = viewConfigurationWindow.ViewConfiguration;
+                    _viewConfiguration = _viewConfigurationWindow.ViewConfiguration;
                     UpdateTree();
                 }
             };
             var haItem = new MenuItem {Header = "Open HA in Browser"};
             haItem.Click += (sender, args) => { Process.Start(url); };
             var aboutItem = new MenuItem {Header = "About HA Taskbar Menu"};
-            aboutItem.Click += (sender, args) => { new AboutWindow().ShowDialog(); };
+            aboutItem.Click += (sender, args) =>
+            {
+                _aboutWindow?.Close();
+                _aboutWindow = new AboutWindow();
+                _aboutWindow.ShowDialog();
+            };
 
             var updateItem = new MenuItem {Header = "Update HA Taskbar Menu"};
             updateItem.Click += (sender, args) => { Process.Start(latestVersion.url); };
@@ -84,8 +88,8 @@ namespace Home_Assistant_Taskbar_Menu
         private void HandleNewEntitiesList(List<Entity> entitiesList)
         {
             UpdateMyStateObjects(entitiesList);
-            Console.WriteLine($"RECEIVED SUPPORTED STATES: {entitiesList.Count}");
-            entitiesList.ForEach(c => { Console.WriteLine($"   {c.EntityId}: {c.State}"); });
+            ConsoleWriter.WriteLine($"RECEIVED SUPPORTED STATES: {entitiesList.Count}", ConsoleColor.Green);
+            entitiesList.ForEach(c => { ConsoleWriter.WriteLine($"   {c.EntityId}: {c.State}", ConsoleColor.Gray); });
             Dispatcher.Invoke(() => UpdateTree());
         }
 
@@ -137,7 +141,8 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void UpdateState(Entity changedState)
         {
-            Console.WriteLine($"STATE UPDATED: {changedState.EntityId} => {changedState.State}");
+            ConsoleWriter.WriteLine($"STATE UPDATED: {changedState.EntityId} => {changedState.State}",
+                ConsoleColor.Green);
             if (_viewConfiguration.ContainsEntity(changedState) ||
                 _viewConfiguration.Children.Count == 0)
             {
@@ -147,11 +152,7 @@ namespace Home_Assistant_Taskbar_Menu
                     _stateObjects[ind] = changedState;
                 }
 
-                Dispatcher.Invoke(() =>
-                {
-                    Console.WriteLine("UPDATING");
-                    UpdateTree();
-                });
+                Dispatcher.Invoke(() => UpdateTree());
             }
         }
 
@@ -172,9 +173,9 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (Menu.Count < 10)
-                return;
-            new SearchWindow(e.Key.ToString(), this._stateObjects).ShowDialog();
+            _searchWindow?.Close();
+            _searchWindow = new SearchWindow(e.Key.ToString(), _stateObjects);
+            _searchWindow.ShowDialog();
         }
     }
 }

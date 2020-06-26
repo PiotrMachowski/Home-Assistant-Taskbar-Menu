@@ -46,7 +46,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             bool debug = !true;
             if (debug)
             {
-                _consumers.Add(new ApiConsumer(msg => true, Console.WriteLine));
+                _consumers.Add(new ApiConsumer(msg => true, msg => ConsoleWriter.WriteLine(msg.Text, ConsoleColor.Gray)));
             }
 
             AuthFlow();
@@ -73,7 +73,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     }));
             _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
             {
-                Console.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}");
+                ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
             });
         }
 
@@ -99,7 +99,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
 
         public async Task Start()
         {
-            Console.WriteLine("STARTING");
+            ConsoleWriter.WriteLine("STARTING", ConsoleColor.Blue);
             await _websocketClient.Start();
             _timer.Elapsed += (sender, args) => Task.Run(() => Ping());
             _timer.AutoReset = true;
@@ -114,7 +114,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     msg => (string) JObject.Parse(msg.Text)["type"] == "auth_required",
                     msg =>
                     {
-                        Console.WriteLine("AUTH REQUIRED");
+                        ConsoleWriter.WriteLine("AUTH REQUIRED", ConsoleColor.Yellow);
                         Authenticated = false;
                         Authenticate();
                     }));
@@ -123,7 +123,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     msg => (string) JObject.Parse(msg.Text)["type"] == "auth_ok",
                     msg =>
                     {
-                        Console.WriteLine("AUTH OK");
+                        ConsoleWriter.WriteLine("AUTH OK", ConsoleColor.Green);
                         Authenticated = true;
                         Task.Run(SubscribeStateChange);
                         Task.Run(GetStates);
@@ -138,7 +138,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
 
         private async Task SubscribeStateChange()
         {
-            Console.WriteLine("SUBSCRIBE STATE CHANGES");
+            ConsoleWriter.WriteLine("SUBSCRIBE STATE CHANGES", ConsoleColor.Blue);
             var id = _counter++;
             var subscribeMsg = $"{{ \"id\": {id},\"type\": \"subscribe_events\",\"event_type\": \"state_changed\"}}";
             await CallApi(id, subscribeMsg);
@@ -146,7 +146,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
 
         private async Task Ping()
         {
-            Console.Out.WriteLine("PING");
+            ConsoleWriter.WriteLine("PING", ConsoleColor.Blue);
             var id = _counter++;
             var subscribeMsg = $"{{ \"id\": {id},\"type\": \"ping\"}}";
             await CallApi(id, subscribeMsg);
@@ -154,7 +154,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
 
         private async Task GetStates()
         {
-            Console.WriteLine("GETTING STATES");
+            ConsoleWriter.WriteLine("GETTING STATES", ConsoleColor.Blue);
             var id = _counter++;
             var subscribeMsg = $"{{ \"id\": {id},\"type\": \"get_states\"}}";
             await CallApi(id, subscribeMsg, msg =>
@@ -194,7 +194,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             serviceCallObject["id"] = id;
             serviceCallObject["type"] = "call_service";
             var json = JsonConvert.SerializeObject(serviceCallObject);
-            Console.WriteLine($"CALLING SERVICE: {json}");
+            ConsoleWriter.WriteLine($"CALLING SERVICE: {json}", ConsoleColor.Blue);
             await CallApi(id, json);
         }
     }

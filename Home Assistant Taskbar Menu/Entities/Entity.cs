@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Home_Assistant_Taskbar_Menu.Utils;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -51,6 +52,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             }
             catch (Exception)
             {
+                ConsoleWriter.WriteLine($"ERROR CREATING UI FOR ENTITY: {EntityId}", ConsoleColor.Red);
                 return new MenuItem { Header = $"ERROR: {EntityId.Replace("_", "__")}", IsEnabled = false };
             }
         }

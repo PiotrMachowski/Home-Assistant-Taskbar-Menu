@@ -179,7 +179,6 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void Save(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(ViewConfiguration));
             Storage.Save(ViewConfiguration);
             DialogResult = true;
         }

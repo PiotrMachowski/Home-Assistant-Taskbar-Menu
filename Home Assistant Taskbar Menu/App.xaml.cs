@@ -24,12 +24,12 @@ namespace Home_Assistant_Taskbar_Menu
 
             if (configuration == null)
             {
-                Console.WriteLine("NO CONFIGURATION");
+                ConsoleWriter.WriteLine("NO CONFIGURATION", ConsoleColor.Red);
                 new AuthWindow().Show();
             }
             else
             {
-                Console.Out.WriteLine("configuration.Url = {0}", configuration.Url);
+                ConsoleWriter.WriteLine($"configuration.Url = {configuration.Url}", ConsoleColor.Green);
                 new MainWindow(configuration, viewConfiguration).Show();
             }
         }
