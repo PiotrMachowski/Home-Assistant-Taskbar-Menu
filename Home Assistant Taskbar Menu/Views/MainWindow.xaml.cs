@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -100,6 +102,7 @@ namespace Home_Assistant_Taskbar_Menu
             HaClientContext.AddStateChangeListener(this, UpdateState);
             HaClientContext.AddEntitiesListListener(HandleNewEntitiesList);
             HaClientContext.AddAuthenticationStateListener(auth => Dispatcher.Invoke(() => UpdateTree(auth)));
+            HaClientContext.AddNotificationListener(HandleNotification);
         }
 
         private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
@@ -176,6 +179,25 @@ namespace Home_Assistant_Taskbar_Menu
             _searchWindow?.Close();
             _searchWindow = new SearchWindow(e.Key.ToString(), _stateObjects);
             _searchWindow.ShowDialog();
+        }
+
+        private void HandleNotification(NotificationEvent notification)
+        {
+            ConsoleWriter.WriteLine($"NOTIFICATION RECEIVED: {notification.Id}", ConsoleColor.Green);
+            if (_viewConfiguration.GetProperty(ViewConfiguration.MirrorNotificationsKey) == true.ToString())
+            {
+                var customIcon = GetIcon();
+                TaskbarIcon.ShowBalloonTip(notification.Title, notification.Message, customIcon, true);
+            }
+        }
+
+        private Icon GetIcon()
+        {
+            using (Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/Images/small.ico"))
+                ?.Stream)
+            {
+                return new Icon(iconStream);
+            }
         }
     }
 }

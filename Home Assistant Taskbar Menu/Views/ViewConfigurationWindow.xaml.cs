@@ -7,7 +7,6 @@ using System.Windows.Input;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 using MaterialDesignThemes.Wpf;
-using Newtonsoft.Json;
 
 namespace Home_Assistant_Taskbar_Menu
 {
@@ -31,7 +30,9 @@ namespace Home_Assistant_Taskbar_Menu
                     ? PackIconKind.WindowMaximize
                     : PackIconKind.WindowRestore;
             };
-            ChangeThemeButton.Content = $"Theme: {viewConfiguration.Name}";
+            ChangeThemeButton.Content = $"Theme: {viewConfiguration.GetProperty(ViewConfiguration.ThemeKey)}";
+            MirrorNotificationsButton.Content =
+                $"Mirror notifications: {viewConfiguration.GetProperty(ViewConfiguration.MirrorNotificationsKey)}";
         }
 
         private void GenerateTree()
@@ -206,10 +207,20 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void ChangeThemeClick(object sender, RoutedEventArgs e)
         {
-            ViewConfiguration.Name = ViewConfiguration.Name == ViewConfiguration.LightTheme
-                ? ViewConfiguration.DarkTheme
-                : ViewConfiguration.LightTheme;
-            ChangeThemeButton.Content = $"Theme: {ViewConfiguration.Name}";
+            ViewConfiguration.Properties[ViewConfiguration.ThemeKey] =
+                ViewConfiguration.GetProperty(ViewConfiguration.ThemeKey) == ViewConfiguration.LightTheme
+                    ? ViewConfiguration.DarkTheme
+                    : ViewConfiguration.LightTheme;
+            ChangeThemeButton.Content = $"Theme: {ViewConfiguration.GetProperty(ViewConfiguration.ThemeKey)}";
+        }
+
+        private void ChangeMirrorNotificationsClick(object sender, RoutedEventArgs e)
+        {
+            ViewConfiguration.Properties[ViewConfiguration.MirrorNotificationsKey] =
+                ViewConfiguration.GetProperty(ViewConfiguration.MirrorNotificationsKey) == true.ToString()
+                    ? false.ToString()
+                    : true.ToString();
+            MirrorNotificationsButton.Content = $"Mirror notifications: {ViewConfiguration.GetProperty(ViewConfiguration.MirrorNotificationsKey)}";
         }
     }
 }

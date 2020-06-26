@@ -32,6 +32,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
 
         private Action<bool> _authenticatedListener;
         private readonly Dictionary<object, Action<Entity>> _stateChangeListeners;
+        private readonly List<Action<NotificationEvent>> _notificationListeners;
         private readonly List<Action<List<Entity>>> _entitiesListListeners;
 
         public HomeAssistantWebsocketsClient(Configuration configuration)
@@ -43,7 +44,8 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _consumers = new List<ApiConsumer>();
             _stateChangeListeners = new Dictionary<object, Action<Entity>>();
             _entitiesListListeners = new List<Action<List<Entity>>>();
-            bool debug = !true;
+            _notificationListeners = new List<Action<NotificationEvent>>();
+            var debug = !true;
             if (debug)
             {
                 _consumers.Add(new ApiConsumer(msg => true, msg => ConsoleWriter.WriteLine(msg.Text, ConsoleColor.Gray)));
@@ -69,6 +71,24 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                         if (entity != null)
                         {
                             _stateChangeListeners.Values.ToList().ForEach(a => Task.Run(() => a.Invoke(entity)));
+                        }
+                    }));
+            _consumers.Add(
+                new ApiConsumer(
+                    msg =>
+                    {
+                        var jsonObject = JObject.Parse(msg.Text);
+                        return (string) jsonObject["type"] == "event" &&
+                               (string)jsonObject["event"]["event_type"] == "state_changed" &&
+                               ((string)jsonObject["event"]["data"]["entity_id"]).Contains(NotificationEvent.Domain);
+
+                    },
+                    msg =>
+                    {
+                        NotificationEvent notificationEvent = NotificationEvent.FromJson(msg.Text);
+                        if (notificationEvent != null)
+                        {
+                            _notificationListeners.ForEach(n => Task.Run(() => n.Invoke(notificationEvent)));
                         }
                     }));
             _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
@@ -196,6 +216,11 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             var json = JsonConvert.SerializeObject(serviceCallObject);
             ConsoleWriter.WriteLine($"CALLING SERVICE: {json}", ConsoleColor.Blue);
             await CallApi(id, json);
+        }
+
+        public void AddNotificationListener(Action<NotificationEvent> listener)
+        {
+            _notificationListeners.Add(listener);
         }
     }
 }

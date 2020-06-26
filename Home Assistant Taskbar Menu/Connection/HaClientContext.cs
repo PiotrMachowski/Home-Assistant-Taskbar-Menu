@@ -31,6 +31,11 @@ namespace Home_Assistant_Taskbar_Menu
             HomeAssistantWebsocketClient.AddAuthenticationStateListener(listener);
         }
 
+        public static void AddNotificationListener(Action<NotificationEvent> listener)
+        {
+            HomeAssistantWebsocketClient.AddNotificationListener(listener);
+        }
+
         public static void AddEntitiesListListener(Action<List<Entity>> listener)
         {
             HomeAssistantWebsocketClient.AddEntitiesListListener(listener);

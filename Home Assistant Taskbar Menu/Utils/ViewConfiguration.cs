@@ -6,8 +6,10 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 {
     public class ViewConfiguration
     {
+        public const string ThemeKey = "Theme";
         public const string LightTheme = "Light";
         public const string DarkTheme = "Dark";
+        public const string MirrorNotificationsKey = "MirrorNotifications";
 
         public Type NodeType { get; set; }
 
@@ -17,9 +19,16 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 
         public List<ViewConfiguration> Children { get; set; } = new List<ViewConfiguration>();
 
+        public Dictionary<string, string> Properties = new Dictionary<string, string>();
+
         public bool ContainsEntity(Entity stateObject)
         {
             return stateObject.EntityId == EntityId || Children.Any(c => c.ContainsEntity(stateObject));
+        }
+
+        public string GetProperty(string key)
+        {
+            return Properties.ContainsKey(key) ? Properties[key] : "";
         }
 
         public static ViewConfiguration Default()
@@ -27,8 +36,12 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             return new ViewConfiguration
             {
                 NodeType = Type.Root,
-                Name = "Light",
-                Children = new List<ViewConfiguration>()
+                Children = new List<ViewConfiguration>(),
+                Properties = new Dictionary<string, string>
+                {
+                    {ThemeKey, LightTheme},
+                    {MirrorNotificationsKey, true.ToString()}
+                }
             };
         }
 

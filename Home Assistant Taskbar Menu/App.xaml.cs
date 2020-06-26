@@ -17,7 +17,7 @@ namespace Home_Assistant_Taskbar_Menu
 
             var paletteHelper = new PaletteHelper();
             var theme = paletteHelper.GetTheme();
-            theme.SetBaseTheme(viewConfiguration.Name == ViewConfiguration.LightTheme
+            theme.SetBaseTheme(viewConfiguration.GetProperty(ViewConfiguration.ThemeKey) == ViewConfiguration.LightTheme
                 ? new MaterialDesignLightTheme()
                 : (IBaseTheme) new MaterialDesignDarkTheme());
             paletteHelper.SetTheme(theme);

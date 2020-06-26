@@ -76,24 +76,25 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" />
-                <Button Content="Add Entity" Margin="0,0,3,0" Grid.Row="1" Grid.Column="0" Click="AddEntityClick"
+                <TreeView Name="TreeView" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+                <Button Content="Add Entity" Margin="3" Grid.Row="1" Grid.Column="0" Click="AddEntityClick"
                         Height="Auto" ToolTip="Add entity to root"/>
-                <Button Content="Add Node" Margin="3,0,3,0" Grid.Row="1" Grid.Column="1" Click="AddNodeClick"
+                <Button Content="Add Node" Margin="3" Grid.Row="1" Grid.Column="1" Click="AddNodeClick"
                         Height="Auto" ToolTip="Add node to root"/>
-                <Button Content="Add Separator" Margin="3,0,3,0" Grid.Row="1" Grid.Column="2"
+                <Button Content="Add Separator" Margin="3" Grid.Row="1" Grid.Column="2"
                         Click="AddSeparatorClick" Height="Auto" ToolTip="Add separator to root"/>
-                <Button Content="Theme: Light" Margin="3,0,3,0" Grid.Row="1" Grid.Column="3" Name="ChangeThemeButton"
+                <Button Content="Theme: Light" Margin="3" Grid.Row="2" Grid.Column="0" Name="ChangeThemeButton"
                         Click="ChangeThemeClick" Height="Auto" ToolTip="Change will take effect after application restart"/>
-                <Button Content="Save" Margin="3,0,0,0" Grid.Row="1" Grid.Column="4" Click="Save"
+                <Button Content="Mirror notifications: true" Margin="3" Grid.Row="2" Grid.Column="1" Name="MirrorNotificationsButton"
+                        Click="ChangeMirrorNotificationsClick" Height="Auto"/>
+                <Button Content="Save" Margin="3" Grid.Row="2" Grid.Column="2" Click="Save"
                         VerticalContentAlignment="Center" Height="Auto" />
             </Grid>
         </DockPanel>
