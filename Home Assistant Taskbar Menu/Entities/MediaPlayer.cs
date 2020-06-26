@@ -31,7 +31,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return SupportedFeatures.ServiceMap;
         }
 
-        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override MenuItem ToMenuItem(Dispatcher dispatcher, string name)
         {
             var root = new MenuItem
             {
@@ -122,7 +122,6 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 TurnOn, TurnOff, Play, Pause, Stop, NextTrack, PreviousTrack, VolumeMute, VolumeSet, VolumeStep, Seek,
                 SelectSource, ClearPlaylist, ShuffleSet, PlayMedia, SelectSoundMode
             };
-
 
             public static readonly Dictionary<int, (string service, string header)> ServiceMap =
                 new Dictionary<int, (string service, string header)>

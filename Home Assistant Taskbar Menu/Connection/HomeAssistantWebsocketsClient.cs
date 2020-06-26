@@ -31,7 +31,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         }
 
         private Action<bool> _authenticatedListener;
-        private readonly List<Action<Entity>> _stateChangeListeners;
+        private readonly Dictionary<object, Action<Entity>> _stateChangeListeners;
         private readonly List<Action<List<Entity>>> _entitiesListListeners;
 
         public HomeAssistantWebsocketsClient(Configuration configuration)
@@ -41,7 +41,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _websocketClient = new WebsocketClient(new Uri(configuration.Url));
             _timer = new Timer(60 * 1000 * 10);
             _consumers = new List<ApiConsumer>();
-            _stateChangeListeners = new List<Action<Entity>>();
+            _stateChangeListeners = new Dictionary<object, Action<Entity>>();
             _entitiesListListeners = new List<Action<List<Entity>>>();
             bool debug = !true;
             if (debug)
@@ -68,7 +68,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                         Entity entity = EntityCreator.CreateFromChangedState(msg.Text);
                         if (entity != null)
                         {
-                            _stateChangeListeners.ForEach(a => Task.Run(() => a.Invoke(entity)));
+                            _stateChangeListeners.Values.ToList().ForEach(a => Task.Run(() => a.Invoke(entity)));
                         }
                     }));
             _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
@@ -82,9 +82,14 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _authenticatedListener = handler;
         }
 
-        public void AddStateChangeListener(Action<Entity> handler)
+        public void AddStateChangeListener(object identifier, Action<Entity> handler)
         {
-            _stateChangeListeners.Add(handler);
+            _stateChangeListeners.Add(identifier, handler);
+        }
+
+        public void RemoveStateChangeListener(object identifier)
+        {
+            _stateChangeListeners.Remove(identifier);
         }
 
         public void AddEntitiesListListener(Action<List<Entity>> handler)

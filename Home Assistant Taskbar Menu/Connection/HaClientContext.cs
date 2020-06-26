@@ -16,9 +16,14 @@ namespace Home_Assistant_Taskbar_Menu
             await HomeAssistantWebsocketClient.Start();
         }
 
-        public static void AddStateChangeListener(Action<Entity> listener)
+        public static void AddStateChangeListener(object identifier, Action<Entity> listener)
         {
-            HomeAssistantWebsocketClient.AddStateChangeListener(listener);
+            HomeAssistantWebsocketClient.AddStateChangeListener(identifier, listener);
+        }
+
+        public static void RemoveStateChangeListener(object identifier)
+        {
+            HomeAssistantWebsocketClient.RemoveStateChangeListener(identifier);
         }
 
         public static void AddAuthenticationStateListener(Action<bool> listener)
@@ -30,7 +35,7 @@ namespace Home_Assistant_Taskbar_Menu
         {
             HomeAssistantWebsocketClient.AddEntitiesListListener(listener);
         }
-        
+
         public static void CallService(Dispatcher dispatcher, Entity stateObject, string service,
             params Tuple<string, object>[] data)
         {

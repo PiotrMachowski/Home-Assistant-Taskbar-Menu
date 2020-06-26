@@ -12,7 +12,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return DomainName;
         }
 
-        protected override Control ToMenuItem(Dispatcher dispatcher, string name)
+        protected override MenuItem ToMenuItem(Dispatcher dispatcher, string name)
         {
             return CreateMenuItem(dispatcher, "turn_on", GetName(name), isEnabled: IsAvailable());
         }

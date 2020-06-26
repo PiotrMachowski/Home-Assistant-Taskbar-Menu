@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
@@ -27,7 +28,7 @@ namespace Home_Assistant_Taskbar_Menu
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
 
 
-        public ObservableCollection<Control> Menu { get; set; }
+        public ObservableCollection<UIElement> Menu { get; set; }
 
         public MainWindow(Configuration configuration, ViewConfiguration viewConfiguration)
         {
@@ -35,7 +36,7 @@ namespace Home_Assistant_Taskbar_Menu
             var latestVersion = ResourceProvider.LatestVersion();
             _viewConfiguration = viewConfiguration;
             _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
-            Menu = new ObservableCollection<Control>();
+            Menu = new ObservableCollection<UIElement>();
             _stateObjects = new List<Entity>();
             InitializeComponent();
             TaskbarMenuRoot.ItemsSource = Menu;
@@ -75,6 +76,7 @@ namespace Home_Assistant_Taskbar_Menu
             {
                 list.Add(updateItem);
             }
+
             list.Add(exitItem);
             return list;
         }
@@ -91,7 +93,7 @@ namespace Home_Assistant_Taskbar_Menu
         {
             HaClientContext.HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(configuration);
             await HaClientContext.Start();
-            HaClientContext.AddStateChangeListener(UpdateState);
+            HaClientContext.AddStateChangeListener(this, UpdateState);
             HaClientContext.AddEntitiesListListener(HandleNewEntitiesList);
             HaClientContext.AddAuthenticationStateListener(auth => Dispatcher.Invoke(() => UpdateTree(auth)));
         }
@@ -99,7 +101,7 @@ namespace Home_Assistant_Taskbar_Menu
         private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             return viewConfiguration.Children.Count == 0
-                ? stateObjects.Select(e => e.ToMenuItemSafe(Dispatcher, null)).ToList()
+                ? stateObjects.Select(e => (Control) e.ToMenuItemSafe(Dispatcher, null)).ToList()
                 : viewConfiguration.Children.Select(c => MapToControl(stateObjects, c)).ToList();
         }
 
@@ -166,6 +168,13 @@ namespace Home_Assistant_Taskbar_Menu
             }
 
             _defaultMenuItems.ForEach(Menu.Add);
+        }
+
+        private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Menu.Count < 10)
+                return;
+            new SearchWindow(e.Key.ToString(), this._stateObjects).ShowDialog();
         }
     }
 }

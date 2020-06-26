@@ -168,6 +168,9 @@
     <Compile Include="Utils\Configuration.cs" />
     <Compile Include="Utils\Storage.cs" />
     <Compile Include="Utils\ViewConfiguration.cs" />
+    <Compile Include="Views\SearchWindow.xaml.cs">
+      <DependentUpon>SearchWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewConfigurationDialog.xaml.cs">
       <DependentUpon>ViewConfigurationDialog.xaml</DependentUpon>
     </Compile>
@@ -191,6 +194,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AuthWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

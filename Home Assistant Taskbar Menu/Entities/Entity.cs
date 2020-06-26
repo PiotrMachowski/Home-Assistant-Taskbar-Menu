@@ -23,6 +23,38 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return Attributes.ContainsKey(name) ? Attributes[name]?.ToString() : null;
         }
 
+        public bool IsOn()
+        {
+            return !OffStates().Contains(State) && OffStates().Count != 0;
+        }
+
+        public bool IsAvailable()
+        {
+            return State != States.Unavailable;
+        }
+
+        public string GetName(string nameOverride = null)
+        {
+            return (!string.IsNullOrEmpty(nameOverride)
+                ? nameOverride
+                : GetAttribute("friendly_name")
+                  ?? EntityId).Replace("_", "__");
+        }
+
+        public abstract string Domain();
+
+        public MenuItem ToMenuItemSafe(Dispatcher dispatcher, string name)
+        {
+            try
+            {
+                return ToMenuItem(dispatcher, name);
+            }
+            catch (Exception)
+            {
+                return new MenuItem { Header = $"ERROR: {EntityId.Replace("_", "__")}", IsEnabled = false };
+            }
+        }
+
         protected bool GetBoolAttribute(string name)
         {
             return bool.Parse(GetAttribute(name) ?? "false");
@@ -51,29 +83,9 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         protected List<string> GetListAttribute(string name)
         {
             return Attributes.ContainsKey(name)
-                ? ((JArray) Attributes[name]).Select(i => (string) i).ToList()
+                ? ((JArray)Attributes[name]).Select(i => (string)i).ToList()
                 : new List<string>();
         }
-
-        public bool IsOn()
-        {
-            return !OffStates().Contains(State);
-        }
-
-        public bool IsAvailable()
-        {
-            return State != States.Unavailable;
-        }
-
-        public string GetName(string nameOverride)
-        {
-            return (!string.IsNullOrEmpty(nameOverride)
-                ? nameOverride
-                : GetAttribute("friendly_name")
-                  ?? EntityId).Replace("_", "__");
-        }
-
-        public abstract string Domain();
 
         protected virtual List<string> OffStates()
         {
@@ -98,19 +110,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 .ToList();
         }
 
-        public Control ToMenuItemSafe(Dispatcher dispatcher, string name)
-        {
-            try
-            {
-                return ToMenuItem(dispatcher, name);
-            }
-            catch (Exception)
-            {
-                return new MenuItem {Header = $"ERROR: {EntityId.Replace("_", "__")}", IsEnabled = false};
-            }
-        }
-
-        protected abstract Control ToMenuItem(Dispatcher dispatcher, string name);
+        protected abstract MenuItem ToMenuItem(Dispatcher dispatcher, string name);
 
         protected bool IsSupported(int supportedFeature)
         {

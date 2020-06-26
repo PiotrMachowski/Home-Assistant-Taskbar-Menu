@@ -17,7 +17,7 @@
         ToolTip="Home Assistant"
         MenuActivation="LeftOrRightClick">
         <tb:TaskbarIcon.ContextMenu>
-            <ContextMenu x:Name="TaskbarMenuRoot" StaysOpen="True" />
+            <ContextMenu x:Name="TaskbarMenuRoot" StaysOpen="True" PreviewKeyDown="UIElement_OnKeyDown"/>
         </tb:TaskbarIcon.ContextMenu>
     </tb:TaskbarIcon>
 </Window>
