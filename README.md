@@ -12,7 +12,7 @@ It can control entities from [supported domains](#application) and display persi
 
 ## Installation
 
-Download `Home Assistant Taskbar Menu.exe` from the latest [release](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/releases/latest) and save it to a dedicated location (e.g. `C:\Users\username\HA Taskbar Menu\`).
+Download `Home.Assistant.Taskbar.Menu.exe` from the latest [release](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/releases/latest) and save it to a dedicated location (e.g. `C:\Users\username\HA Taskbar Menu\`).
 
 ## Configuration
 
