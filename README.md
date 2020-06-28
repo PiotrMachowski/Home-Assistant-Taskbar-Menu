@@ -91,6 +91,7 @@ In the second row of buttons you can configure other application features:
 You can copy it between computers to use the same connections parameters.
 * View configuration is stored in `viewConfig.dat`.
 You can copy it between computers to use the same view configuration.
+* To start this application with windows add a shortcut to `StartUp` folder. You can open it by running command `shell:startup` in Run menu (shortcut: [WIN] + [R])
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
