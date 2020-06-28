@@ -1,3 +1,4 @@
+[![Community Forum](https://img.shields.io/badge/Community-Forum-41BDF5.svg?style=popout)](https://community.home-assistant.io/t/home-assistant-taskbar-menu-for-windows)
 [![buymeacoffee_badge](https://img.shields.io/badge/Donate-buymeacoffe-ff813f?style=flat)](https://www.buymeacoffee.com/PiotrMachowski)
 
 # Home Assistant Taskbar Menu
