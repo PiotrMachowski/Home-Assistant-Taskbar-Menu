@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 
@@ -46,6 +47,15 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             }
             GetSupportedFeatures()
                 .ForEach(supportedFeature => AddMenuItemIfSupported(dispatcher, root, supportedFeature));
+            root.PreviewMouseDown += (sender, args) =>
+            {
+                if (args.ChangedButton == MouseButton.Right && IsSupported(SupportedFeatures.TurnOn, SupportedFeatures.TurnOff))
+                {
+                    HaClientContext.CallService(dispatcher, this, "toggle");
+                    args.Handled = true;
+                }
+            };
+
             if (IsSupported(SupportedFeatures.FanSpeed))
             {
                 var fanSpeedItem = new MenuItem {Header = "Fan Speed", StaysOpenOnClick = true};
@@ -63,8 +73,8 @@ namespace Home_Assistant_Taskbar_Menu.Entities
 
         private static class SupportedFeatures
         {
-            private const int TurnOn = 1;
-            private const int TurnOff = 2;
+            public const int TurnOn = 1;
+            public const int TurnOff = 2;
             private const int Pause = 4;
             private const int Stop = 8;
             private const int ReturnHome = 16;

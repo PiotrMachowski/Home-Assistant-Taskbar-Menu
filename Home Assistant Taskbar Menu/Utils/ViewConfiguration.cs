@@ -17,18 +17,20 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 
         public string EntityId { get; set; }
 
-        public List<ViewConfiguration> Children { get; set; } = new List<ViewConfiguration>();
+        public List<ViewConfiguration> Children { get; set; }
 
-        public Dictionary<string, string> Properties = new Dictionary<string, string>();
+        public Dictionary<string, string> Properties;
 
         public bool ContainsEntity(Entity stateObject)
         {
-            return stateObject.EntityId == EntityId || Children.Any(c => c.ContainsEntity(stateObject));
+            return NodeType == Type.Entity && stateObject.EntityId == EntityId
+                   || (NodeType == Type.Folder || NodeType == Type.Root)
+                   && Children.Any(c => c.ContainsEntity(stateObject));
         }
 
         public string GetProperty(string key)
         {
-            return Properties.ContainsKey(key) ? Properties[key] : "";
+            return Properties != null && Properties.ContainsKey(key) ? Properties[key] : "";
         }
 
         public static ViewConfiguration Default()
@@ -68,7 +70,8 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             return new ViewConfiguration
             {
                 NodeType = Type.Folder,
-                Name = name
+                Name = name,
+                Children = new List<ViewConfiguration>()
             };
         }
 

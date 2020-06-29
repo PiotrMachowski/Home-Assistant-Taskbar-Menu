@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 
@@ -45,6 +46,15 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             }
             else
             {
+                root.PreviewMouseDown += (sender, args) =>
+                {
+                    if (args.ChangedButton == MouseButton.Right)
+                    {
+                        HaClientContext.CallService(dispatcher, this, "toggle");
+                        args.Handled = true;
+                    }
+                };
+
                 root.Items.Add(CreateMenuItem(dispatcher, "turn_on", "Turn On"));
                 root.Items.Add(CreateMenuItem(dispatcher, "turn_off", "Turn Off"));
                 if (features.Contains(SupportedFeatures.SetSpeed))

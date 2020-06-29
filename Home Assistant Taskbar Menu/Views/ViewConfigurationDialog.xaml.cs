@@ -35,7 +35,8 @@ namespace Home_Assistant_Taskbar_Menu
         private void Save(object sender, RoutedEventArgs e)
         {
             ViewConfiguration = _isEntity
-                ? ViewConfiguration.Entity(((Entity)EntityIdComboBox.SelectedItem).EntityId, NameTextBox.Text)
+                ? ViewConfiguration.Entity(((Entity) EntityIdComboBox.SelectedItem).EntityId,
+                    string.IsNullOrEmpty(NameTextBox.Text) ? null : NameTextBox.Text)
                 : ViewConfiguration.Folder(NameTextBox.Text);
             DialogResult = true;
         }

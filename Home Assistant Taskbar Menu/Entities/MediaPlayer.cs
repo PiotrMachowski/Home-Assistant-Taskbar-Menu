@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 
@@ -43,6 +44,14 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             {
                 root.Icon = new PackIcon { Kind = PackIconKind.Tick };
             }
+            root.PreviewMouseDown += (sender, args) =>
+            {
+                if (args.ChangedButton == MouseButton.Right)
+                {
+                    HaClientContext.CallService(dispatcher, this, "toggle");
+                    args.Handled = true;
+                }
+            };
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.TurnOn);
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.TurnOff);
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.Play);

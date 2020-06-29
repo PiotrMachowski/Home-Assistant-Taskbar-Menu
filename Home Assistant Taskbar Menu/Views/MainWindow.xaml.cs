@@ -35,10 +35,10 @@ namespace Home_Assistant_Taskbar_Menu
         {
             var latestVersion = ResourceProvider.LatestVersion();
             _viewConfiguration = viewConfiguration;
-            _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
-            Menu = new ObservableCollection<UIElement>();
             _stateObjects = new List<Entity>();
+            Menu = new ObservableCollection<UIElement>();
             InitializeComponent();
+            _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
             TaskbarMenuRoot.ItemsSource = Menu;
             Task.Run(() => { InitConnection(configuration).Wait(); });
         }
@@ -81,6 +81,7 @@ namespace Home_Assistant_Taskbar_Menu
             if (!ResourceProvider.IsUpToDate(latestVersion))
             {
                 list.Add(updateItem);
+                ShowNotification("Home Assistant Taskbar Menu", "Update is available");
             }
 
             list.Add(exitItem);
@@ -108,7 +109,10 @@ namespace Home_Assistant_Taskbar_Menu
         private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             return viewConfiguration.Children.Count == 0
-                ? stateObjects.Select(e => (Control) e.ToMenuItemSafe(Dispatcher, null)).ToList()
+                ? stateObjects.Where(e => e.Domain() != Automation.DomainName && e.Domain() != Script.DomainName)
+                    .Select(e => (Control) e.ToMenuItemSafe(Dispatcher, null))
+                    .Take(100)
+                    .ToList()
                 : viewConfiguration.Children.Select(c => MapToControl(stateObjects, c)).ToList();
         }
 
@@ -186,9 +190,13 @@ namespace Home_Assistant_Taskbar_Menu
             ConsoleWriter.WriteLine($"NOTIFICATION RECEIVED: {notification.Id}", ConsoleColor.Green);
             if (_viewConfiguration.GetProperty(ViewConfiguration.MirrorNotificationsKey) == true.ToString())
             {
-                var customIcon = GetIcon();
-                TaskbarIcon.ShowBalloonTip(notification.Title, notification.Message, customIcon, true);
+                ShowNotification(notification.Title, notification.Message);
             }
+        }
+
+        private void ShowNotification(string title, string message)
+        {
+            TaskbarIcon.ShowBalloonTip(title, message, GetIcon(), true);
         }
 
         private Icon GetIcon()

@@ -114,9 +114,10 @@ namespace Home_Assistant_Taskbar_Menu.Entities
 
         protected abstract MenuItem ToMenuItem(Dispatcher dispatcher, string name);
 
-        protected bool IsSupported(int supportedFeature)
+        protected bool IsSupported(params int[] supportedFeatures)
         {
-            return GetSupportedFeatures().Contains(supportedFeature);
+            return supportedFeatures.ToList()
+                .TrueForAll(supportedFeature => GetSupportedFeatures().Contains(supportedFeature));
         }
 
         protected void AddMenuItemIfSupported(Dispatcher dispatcher, ItemsControl root, int supportedFeature)

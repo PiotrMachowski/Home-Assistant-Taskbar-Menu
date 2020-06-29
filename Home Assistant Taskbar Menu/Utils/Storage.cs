@@ -63,7 +63,10 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         {
             using (var streamWriter = new StreamWriter(ViewConfigPath))
             {
-                streamWriter.Write(JsonConvert.SerializeObject(viewConfiguration));
+                streamWriter.Write(JsonConvert.SerializeObject(viewConfiguration, Formatting.Indented, new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }));
             }
         }
 
