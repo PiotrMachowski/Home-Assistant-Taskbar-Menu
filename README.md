@@ -49,7 +49,7 @@ This application can control entities from following domains:
 * `switch`
 * `vacuum`
 
-By default menu contains all supported entities, ordered alphabetically by id.
+By default menu contains first 100 supported entities except automations and scripts, ordered alphabetically by entity id.
 
 ![menu_1](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/raw/master/Images/menu_1.png)
 ![menu_2](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/raw/master/Images/menu_2.png)
@@ -85,6 +85,7 @@ In the second row of buttons you can configure other application features:
 
 ## Usage
 
+* You can quickly toggle an entity (if supported) by clicking it with right mouse button.
 * To open search menu start typing when mouse is over an open menu
 * You can close search window by pressing [Esc]
 * Connection configuration is stored as encrypted text in `config.dat`. 
@@ -92,6 +93,11 @@ You can copy it between computers to use the same connections parameters.
 * View configuration is stored in `viewConfig.dat`.
 You can copy it between computers to use the same view configuration.
 * To start this application with windows add a shortcut to `StartUp` folder. You can open it by running command `shell:startup` in Run menu (shortcut: [WIN] + [R])
+
+
+## Updating
+
+To update the application to newer version you just have to replace `exe` file with a newer one.
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
