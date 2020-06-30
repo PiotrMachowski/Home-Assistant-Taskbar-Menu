@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
 using Home_Assistant_Taskbar_Menu.Views;
+using MaterialDesignThemes.Wpf;
+using Icon = System.Drawing.Icon;
 
 namespace Home_Assistant_Taskbar_Menu
 {
@@ -26,7 +28,7 @@ namespace Home_Assistant_Taskbar_Menu
         private ViewConfigurationWindow _viewConfigurationWindow;
 
         private ViewConfiguration _viewConfiguration;
-        private readonly List<Control> _defaultMenuItems;
+        private readonly List<FrameworkElement> _defaultMenuItems;
         private readonly List<Entity> _stateObjects;
 
         public ObservableCollection<UIElement> Menu { get; set; }
@@ -43,14 +45,28 @@ namespace Home_Assistant_Taskbar_Menu
             Task.Run(() => { InitConnection(configuration).Wait(); });
         }
 
-        private List<Control> CreateDefaultMenuItems(string configurationUrl,
+        private List<FrameworkElement> CreateDefaultMenuItems(string configurationUrl,
             (string version, string url) latestVersion)
         {
+            var showUpdate = !ResourceProvider.IsUpToDate(latestVersion);
             var url = configurationUrl.Replace("wss://", "https://")
                 .Replace("ws://", "http://")
                 .Replace("/api/websocket", "");
-            var editView = new MenuItem {Header = "Edit view configuration"};
-            editView.Click += (sender, args) =>
+            Grid grid = new Grid() {MinWidth = 220};
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            if (showUpdate)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition());
+                grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            }
+
+            CreateMenuIcon(grid, PackIconKind.Settings, "Edit Application Settings", () =>
             {
                 _viewConfigurationWindow?.Close();
                 _viewConfigurationWindow = new ViewConfigurationWindow(_stateObjects, _viewConfiguration);
@@ -60,33 +76,54 @@ namespace Home_Assistant_Taskbar_Menu
                     _viewConfiguration = _viewConfigurationWindow.ViewConfiguration;
                     UpdateTree();
                 }
-            };
-            var haItem = new MenuItem {Header = "Open HA in Browser"};
-            haItem.Click += (sender, args) => { Process.Start(url); };
-            var aboutItem = new MenuItem {Header = "About HA Taskbar Menu"};
-            aboutItem.Click += (sender, args) =>
+            });
+            CreateMenuIcon(grid, PackIconKind.HomeAssistant, "Open Home Assistant in Browser",
+                () => Process.Start(url));
+            CreateMenuIcon(grid, PackIconKind.About, "About HA Taskbar Menu", () =>
             {
                 _aboutWindow?.Close();
                 _aboutWindow = new AboutWindow();
                 _aboutWindow.ShowDialog();
-            };
-
-            var updateItem = new MenuItem {Header = "Update HA Taskbar Menu"};
-            updateItem.Click += (sender, args) => { Process.Start(latestVersion.url); };
-
-            var exitItem = new MenuItem {Header = "Exit"};
-            exitItem.Click += (sender, args) => { Application.Current.Shutdown(); };
-
-            var list = new List<Control> {new Separator(), editView, haItem, aboutItem};
-            if (!ResourceProvider.IsUpToDate(latestVersion))
+            });
+            if (showUpdate)
             {
-                list.Add(updateItem);
-                ShowNotification("Home Assistant Taskbar Menu", "Update is available");
+                CreateMenuIcon(grid, PackIconKind.Update, "Update HA Taskbar Menu",
+                    () => Process.Start(latestVersion.url));
             }
 
-            list.Add(exitItem);
-            return list;
+            CreateMenuIcon(grid, PackIconKind.Close, "Exit", () => Application.Current.Shutdown());
+            return new List<FrameworkElement> {new Separator(), grid};
         }
+
+        private static void CreateMenuIcon(Grid grid, PackIconKind kind, string tooltip, Action clickAction)
+        {
+            var paletteHelper = new PaletteHelper();
+            var theme = paletteHelper.GetTheme();
+            PackIcon icon = new PackIcon
+            {
+                Kind = kind,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = double.NaN,
+                Height = double.NaN,
+                Margin = new Thickness(3),
+                Foreground = new SolidColorBrush(theme.ToolTipBackground)
+            };
+            Button button = new Button()
+            {
+                Width = double.NaN,
+                Height = double.NaN,
+                Content = icon,
+                ToolTip = tooltip,
+                Padding = new Thickness(0),
+                Background = Brushes.Transparent,
+                BorderBrush = Brushes.Transparent
+            };
+            button.PreviewMouseDown += (sender, args) => { clickAction.Invoke(); };
+            Grid.SetColumn(button, grid.Children.Count * 2);
+            grid.Children.Add(button);
+        }
+
 
         private void HandleNewEntitiesList(List<Entity> entitiesList)
         {
