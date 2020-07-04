@@ -37,8 +37,9 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             };
             if (IsOn())
             {
-                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+                root.Icon = new PackIcon {Kind = PackIconKind.Tick};
             }
+
             var features = GetSupportedFeatures();
             if (features.Count == 0)
             {
@@ -50,8 +51,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 {
                     if (args.ChangedButton == MouseButton.Right)
                     {
-                        HaClientContext.CallService(dispatcher, this, "toggle");
-                        args.Handled = true;
+                        args.Handled = ToggleIfPossible(dispatcher);
                     }
                 };
 
@@ -60,7 +60,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 if (features.Contains(SupportedFeatures.SetSpeed))
                 {
                     var currentSpeed = GetAttribute("speed");
-                    var speedRootItem = new MenuItem {Header = "Set Speed", StaysOpenOnClick = true };
+                    var speedRootItem = new MenuItem {Header = "Set Speed", StaysOpenOnClick = true};
                     GetListAttribute("speed_list")
                         .ForEach(speedValue =>
                             speedRootItem.Items.Add(
@@ -79,7 +79,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 if (features.Contains(SupportedFeatures.Direction))
                 {
                     var currentDirection = GetAttribute("speed");
-                    var directionsItem = new MenuItem {Header = "Set Direction", StaysOpenOnClick = true };
+                    var directionsItem = new MenuItem {Header = "Set Direction", StaysOpenOnClick = true};
                     new List<Tuple<string, string>>
                             {Tuple.Create("forward", "Forward"), Tuple.Create("reverse", "Reverse")}
                         .ForEach(t =>
@@ -93,6 +93,11 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return root;
         }
 
+        public override bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            HaClientContext.CallService(dispatcher, this, "toggle");
+            return true;
+        }
 
         private static class SupportedFeatures
         {

@@ -43,16 +43,16 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             };
             if (IsOn())
             {
-                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+                root.Icon = new PackIcon {Kind = PackIconKind.Tick};
             }
+
             GetSupportedFeatures()
                 .ForEach(supportedFeature => AddMenuItemIfSupported(dispatcher, root, supportedFeature));
             root.PreviewMouseDown += (sender, args) =>
             {
-                if (args.ChangedButton == MouseButton.Right && IsSupported(SupportedFeatures.TurnOn, SupportedFeatures.TurnOff))
+                if (args.ChangedButton == MouseButton.Right)
                 {
-                    HaClientContext.CallService(dispatcher, this, "toggle");
-                    args.Handled = true;
+                    args.Handled = ToggleIfPossible(dispatcher);
                 }
             };
 
@@ -62,13 +62,25 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 var currentFanSpeed = GetAttribute("fan_speed");
                 GetListAttribute("fan_speed_list").ForEach(fanSpeed =>
                 {
-                    fanSpeedItem.Items.Add(CreateMenuItem(dispatcher, "set_fan_speed", fanSpeed, fanSpeed == currentFanSpeed,
+                    fanSpeedItem.Items.Add(CreateMenuItem(dispatcher, "set_fan_speed", fanSpeed,
+                        fanSpeed == currentFanSpeed,
                         data: Tuple.Create<string, object>("fan_speed", fanSpeed)));
                 });
                 root.Items.Add(fanSpeedItem);
             }
 
             return root;
+        }
+
+        public override bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            if (IsSupported(SupportedFeatures.TurnOn, SupportedFeatures.TurnOff))
+            {
+                HaClientContext.CallService(dispatcher, this, "toggle");
+                return true;
+            }
+
+            return false;
         }
 
         private static class SupportedFeatures

@@ -64,6 +64,7 @@ namespace Home_Assistant_Taskbar_Menu
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition());
                 grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+                ShowNotification("Home Assistant Taskbar Menu", "New version of application is available");
             }
 
             CreateMenuIcon(grid, PackIconKind.Settings, "Edit Application Settings", () =>

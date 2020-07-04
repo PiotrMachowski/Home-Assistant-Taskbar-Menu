@@ -59,16 +59,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 {
                     if (args.ChangedButton == MouseButton.Right)
                     {
-                        if (IsSupported(SupportedFeatures.Open, SupportedFeatures.Close))
-                        {
-                            HaClientContext.CallService(dispatcher, this, "toggle");
-                        }
-                        else if (IsSupported(SupportedFeatures.OpenTilt, SupportedFeatures.CloseTilt))
-                        {
-                            HaClientContext.CallService(dispatcher, this, "toggle");
-                        }
-
-                        args.Handled = true;
+                        args.Handled = ToggleIfPossible(dispatcher);
                     }
                 };
 
@@ -115,6 +106,23 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                     {StopTilt, (service: "stop_cover_tilt", header: "Stop Tilt")},
                     {SetTiltPosition, (service: "set_cover_tilt_position", header: "Tilt Position")}
                 };
+        }
+
+        public override bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            if (IsSupported(SupportedFeatures.Open, SupportedFeatures.Close))
+            {
+                HaClientContext.CallService(dispatcher, this, "toggle");
+                return true;
+            }
+
+            if (IsSupported(SupportedFeatures.OpenTilt, SupportedFeatures.CloseTilt))
+            {
+                HaClientContext.CallService(dispatcher, this, "toggle");
+                return true;
+            }
+
+            return false;
         }
     }
 }

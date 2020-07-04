@@ -48,7 +48,8 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             var debug = !true;
             if (debug)
             {
-                _consumers.Add(new ApiConsumer(msg => true, msg => ConsoleWriter.WriteLine(msg.Text, ConsoleColor.Gray)));
+                _consumers.Add(
+                    new ApiConsumer(msg => true, msg => ConsoleWriter.WriteLine(msg.Text, ConsoleColor.Gray)));
             }
 
             AuthFlow();
@@ -57,6 +58,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                 var toRemove = _consumers.Where(c => c.Consume(msg)).ToList();
                 toRemove.ForEach(c => _consumers.Remove(c));
             });
+            // _websocketClient.ReconnectionHappened
             _consumers.Add(
                 new ApiConsumer(
                     msg =>
@@ -79,9 +81,8 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     {
                         var jsonObject = JObject.Parse(msg.Text);
                         return (string) jsonObject["type"] == "event" &&
-                               (string)jsonObject["event"]["event_type"] == "state_changed" &&
-                               ((string)jsonObject["event"]["data"]["entity_id"]).Contains(NotificationEvent.Domain);
-
+                               (string) jsonObject["event"]["event_type"] == "state_changed" &&
+                               ((string) jsonObject["event"]["data"]["entity_id"]).Contains(NotificationEvent.Domain);
                     },
                     msg =>
                     {
@@ -93,7 +94,11 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     }));
             _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
             {
-                ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
+                {
+                    ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
+                    Authenticated = false;
+                    Authenticate();
+                }
             });
         }
 
@@ -121,7 +126,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         {
             ConsoleWriter.WriteLine("STARTING", ConsoleColor.Blue);
             await _websocketClient.Start();
-            _timer.Elapsed += (sender, args) => Task.Run(() => Ping());
+            _timer.Elapsed += (sender, args) => Task.Run(Ping);
             _timer.AutoReset = true;
             _timer.Enabled = true;
         }

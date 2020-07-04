@@ -53,7 +53,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             catch (Exception)
             {
                 ConsoleWriter.WriteLine($"ERROR CREATING UI FOR ENTITY: {EntityId}", ConsoleColor.Red);
-                return new MenuItem { Header = $"ERROR: {EntityId.Replace("_", "__")}", IsEnabled = false };
+                return new MenuItem {Header = $"ERROR: {EntityId.Replace("_", "__")}", IsEnabled = false};
             }
         }
 
@@ -85,7 +85,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         protected List<string> GetListAttribute(string name)
         {
             return Attributes.ContainsKey(name)
-                ? ((JArray)Attributes[name]).Select(i => (string)i).ToList()
+                ? ((JArray) Attributes[name]).Select(i => (string) i).ToList()
                 : new List<string>();
         }
 
@@ -113,6 +113,11 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         }
 
         protected abstract MenuItem ToMenuItem(Dispatcher dispatcher, string name);
+
+        public virtual bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            return false;
+        }
 
         protected bool IsSupported(params int[] supportedFeatures)
         {

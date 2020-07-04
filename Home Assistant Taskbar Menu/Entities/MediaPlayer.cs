@@ -42,14 +42,14 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             };
             if (IsOn())
             {
-                root.Icon = new PackIcon { Kind = PackIconKind.Tick };
+                root.Icon = new PackIcon {Kind = PackIconKind.Tick};
             }
+
             root.PreviewMouseDown += (sender, args) =>
             {
                 if (args.ChangedButton == MouseButton.Right)
                 {
-                    HaClientContext.CallService(dispatcher, this, "toggle");
-                    args.Handled = true;
+                    args.Handled = ToggleIfPossible(dispatcher);
                 }
             };
             AddMenuItemIfSupported(dispatcher, root, SupportedFeatures.TurnOn);
@@ -79,7 +79,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             {
                 var currentSource = GetAttribute("source");
                 var sources = GetListAttribute("source_list");
-                var sourcesRoot = new MenuItem {Header = "Source", StaysOpenOnClick = true };
+                var sourcesRoot = new MenuItem {Header = "Source", StaysOpenOnClick = true};
                 sources.ForEach(source => sourcesRoot.Items.Add(CreateMenuItem(dispatcher, "select_source", source,
                     currentSource == source, data: Tuple.Create<string, object>("source", source))));
                 root.Items.Add(sourcesRoot);
@@ -97,7 +97,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             {
                 var currentSoundMode = GetAttribute("sound_mode");
                 var soundModes = GetListAttribute("sound_mode_list");
-                var soundModesRoot = new MenuItem {Header = "Sound Mode", StaysOpenOnClick = true };
+                var soundModesRoot = new MenuItem {Header = "Sound Mode", StaysOpenOnClick = true};
                 soundModes.ForEach(soundMode => soundModesRoot.Items.Add(CreateMenuItem(dispatcher, "select_sound_mode",
                     soundMode, currentSoundMode == soundMode,
                     data: Tuple.Create<string, object>("sound_mode", soundMode))));
@@ -105,6 +105,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             }
 
             return root;
+        }
+
+        public override bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            HaClientContext.CallService(dispatcher, this, "toggle");
+            return true;
         }
 
         private static class SupportedFeatures

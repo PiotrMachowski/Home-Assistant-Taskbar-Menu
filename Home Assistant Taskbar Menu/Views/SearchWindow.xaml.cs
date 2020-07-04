@@ -59,7 +59,7 @@ namespace Home_Assistant_Taskbar_Menu.Views
         {
             MenuItem item = entity.ToMenuItemSafe(Dispatcher, null);
             item.Visibility = Visibility.Hidden;
-            PackIcon icon = new PackIcon()
+            PackIcon icon = new PackIcon
             {
                 Kind = PackIconKind.Tick,
                 Height = double.NaN,
@@ -78,14 +78,19 @@ namespace Home_Assistant_Taskbar_Menu.Views
             {
                 Width = double.NaN,
                 IsEnabled = entity.IsAvailable(),
-                ContextMenu = new ContextMenu()
+                ContextMenu = new ContextMenu {StaysOpen = false}
             };
             grid.Children.Add(icon);
             grid.Children.Add(label);
             grid.Children.Add(item);
-            grid.ColumnDefinitions.Add(new ColumnDefinition() {Width = new GridLength(30)});
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = new GridLength(30)});
             grid.ColumnDefinitions.Add(new ColumnDefinition());
-
+            grid.PreviewMouseUp += (sender, args) => args.Handled = true;
+            grid.PreviewMouseDown += (sender, args) =>
+            {
+                if (args.ChangedButton == MouseButton.Right)
+                    args.Handled = entity.ToggleIfPossible(Dispatcher);
+            };
             grid.MouseDown += (sender, args) =>
             {
                 if (grid.ContextMenu.Items.Count == 0)

@@ -54,8 +54,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 {
                     if (args.ChangedButton == MouseButton.Right)
                     {
-                        HaClientContext.CallService(dispatcher, this, "toggle");
-                        args.Handled = true;
+                        args.Handled = ToggleIfPossible(dispatcher);
                     }
                 };
                 root.Items.Add(CreateMenuItem(dispatcher, "turn_on", "Turn On"));
@@ -70,6 +69,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             }
 
             return root;
+        }
+
+        public override bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            HaClientContext.CallService(dispatcher, this, "toggle");
+            return true;
         }
 
         private static class SupportedFeatures

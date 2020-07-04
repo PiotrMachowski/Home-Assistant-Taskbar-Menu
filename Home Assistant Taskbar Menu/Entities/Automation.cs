@@ -39,8 +39,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             {
                 if (args.ChangedButton == MouseButton.Right)
                 {
-                    HaClientContext.CallService(dispatcher, this, "toggle");
-                    args.Handled = true;
+                    args.Handled = ToggleIfPossible(dispatcher);
                 }
             };
 
@@ -51,6 +50,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 Tuple.Create("trigger", "Trigger")
             }.ForEach(t => root.Items.Add(CreateMenuItem(dispatcher, t.Item1, t.Item2)));
             return root;
+        }
+
+        public override bool ToggleIfPossible(Dispatcher dispatcher)
+        {
+            HaClientContext.CallService(dispatcher, this, "toggle");
+            return true;
         }
     }
 }
