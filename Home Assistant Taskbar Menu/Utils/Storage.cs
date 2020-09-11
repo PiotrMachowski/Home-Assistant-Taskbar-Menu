@@ -9,11 +9,16 @@ namespace Home_Assistant_Taskbar_Menu.Utils
 {
     public static class Storage
     {
-        public const string CredentialsPath = @"config.dat";
-        public const string ViewConfigPath = @"viewConfig.dat";
+        public static string BrowserCachePath => $"{_basePath}\\browserCache";
+        private static string CredentialsPathOld => $"{_basePath}\\config.dat";
+        private static string ViewConfigPathOld => $"{_basePath}\\viewConfig.dat";
+        private static string CredentialsPath => $"{_basePath}\\config_credentials.dat";
+        private static string ViewConfigPath => $"{_basePath}\\config_view.dat";
+        private static string BrowserConfigPath => $"{_basePath}\\config_position.dat";
         private const string PassPhrase = "ThisIsASecurePassword";
-        private const int Keysize = 256;
+        private const int KeySize = 256;
         private const int DerivationIterations = 1000;
+        private static string _basePath = "";
 
         public static Configuration RestoreConfiguration()
         {
@@ -63,12 +68,69 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         {
             using (var streamWriter = new StreamWriter(ViewConfigPath))
             {
-                streamWriter.Write(JsonConvert.SerializeObject(viewConfiguration, Formatting.Indented, new JsonSerializerSettings()
-                {
-                    NullValueHandling = NullValueHandling.Ignore
-                }));
+                streamWriter.Write(JsonConvert.SerializeObject(viewConfiguration, Formatting.Indented,
+                    new JsonSerializerSettings()
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    }));
             }
         }
+
+        public static void SavePosition((double x, double y, double width, double height) position)
+        {
+            using (var streamWriter = new StreamWriter(BrowserConfigPath))
+            {
+                streamWriter.WriteLine(position.x);
+                streamWriter.WriteLine(position.y);
+                streamWriter.WriteLine(position.width);
+                streamWriter.WriteLine(position.height);
+            }
+        }
+
+        public static (double x, double y, double width, double height)? RestorePosition()
+        {
+            (double, double, double, double)? position;
+            try
+            {
+                using (var streamReader = new StreamReader(BrowserConfigPath))
+                {
+                    double x = Convert.ToDouble(streamReader.ReadLine());
+                    double y = Convert.ToDouble(streamReader.ReadLine());
+                    double width = Convert.ToDouble(streamReader.ReadLine());
+                    double height = Convert.ToDouble(streamReader.ReadLine());
+                    position = (x, y, width, height);
+                }
+            }
+            catch (Exception)
+            {
+                position = null;
+            }
+
+            return position;
+        }
+
+        public static void InitConfigDirectory()
+        {
+            string currentDir = Directory.GetCurrentDirectory().Split('\\').ToList().Last();
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            _basePath = $"{appData}\\Home Assistant Taskbar Menu\\{currentDir}";
+            Directory.CreateDirectory(_basePath);
+            MoveFile(CredentialsPathOld, CredentialsPath);
+            MoveFile(ViewConfigPathOld, ViewConfigPath);
+        }
+
+        private static void MoveFile(string source, string destination)
+        {
+            try
+            {
+                File.Move(source, destination);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
 
         private static string Encrypt(string plainText)
         {
@@ -77,7 +139,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(PassPhrase, saltStringBytes, DerivationIterations))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
+                var keyBytes = password.GetBytes(KeySize / 8);
                 using (var symmetricKey = new RijndaelManaged())
                 {
                     symmetricKey.BlockSize = 256;
@@ -107,14 +169,14 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         private static string Decrypt(string cipherText)
         {
             var cipherTextBytesWithSaltAndIv = Convert.FromBase64String(cipherText);
-            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(Keysize / 8).ToArray();
-            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(Keysize / 8).Take(Keysize / 8).ToArray();
-            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip(Keysize / 8 * 2)
-                .Take(cipherTextBytesWithSaltAndIv.Length - Keysize / 8 * 2).ToArray();
+            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(KeySize / 8).ToArray();
+            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(KeySize / 8).Take(KeySize / 8).ToArray();
+            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip(KeySize / 8 * 2)
+                .Take(cipherTextBytesWithSaltAndIv.Length - KeySize / 8 * 2).ToArray();
 
             using (var password = new Rfc2898DeriveBytes(PassPhrase, saltStringBytes, DerivationIterations))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
+                var keyBytes = password.GetBytes(KeySize / 8);
                 using (var symmetricKey = new RijndaelManaged())
                 {
                     symmetricKey.BlockSize = 256;

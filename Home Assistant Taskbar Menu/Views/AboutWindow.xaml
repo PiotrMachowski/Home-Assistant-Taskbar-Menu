@@ -60,14 +60,6 @@
                         <Ellipse Height="5" Width="5" Fill="Black" />
                     </BulletDecorator.Bullet>
                     <TextBlock Margin="5,0,0,0">
-                        <Hyperlink NavigateUri="https://github.com/Fody/Costura" RequestNavigate="OpenHyperlink">Costura</Hyperlink>
-                    </TextBlock>
-                </BulletDecorator>
-                <BulletDecorator HorizontalAlignment="Center">
-                    <BulletDecorator.Bullet>
-                        <Ellipse Height="5" Width="5" Fill="Black" />
-                    </BulletDecorator.Bullet>
-                    <TextBlock Margin="5,0,0,0">
                         <Hyperlink NavigateUri="http://www.hardcodet.net/wpf-notifyicon"
                                    RequestNavigate="OpenHyperlink">
                             WPF NotifyIcon
@@ -101,6 +93,17 @@
                         <Hyperlink NavigateUri="https://github.com/Marfusios/websocket-client"
                                    RequestNavigate="OpenHyperlink">
                             Websocket .NET
+                        </Hyperlink>
+                    </TextBlock>
+                </BulletDecorator>
+                <BulletDecorator HorizontalAlignment="Center">
+                    <BulletDecorator.Bullet>
+                        <Ellipse Height="5" Width="5" Fill="Black" />
+                    </BulletDecorator.Bullet>
+                    <TextBlock Margin="5,0,0,0">
+                        <Hyperlink NavigateUri="https://github.com/cefsharp/CefSharp"
+                                   RequestNavigate="OpenHyperlink">
+                            CefSharp
                         </Hyperlink>
                     </TextBlock>
                 </BulletDecorator>

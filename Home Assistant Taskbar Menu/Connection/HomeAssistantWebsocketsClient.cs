@@ -13,6 +13,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
 {
     public class HomeAssistantWebsocketsClient
     {
+        private readonly bool _debug = false;
         private readonly Timer _timer;
         private readonly WebsocketClient _websocketClient;
         private readonly string _token;
@@ -40,16 +41,16 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _token = configuration.Token;
             _counter = 1;
             _websocketClient = new WebsocketClient(new Uri(configuration.Url));
-            _timer = new Timer(60 * 1000 * 10);
+            _timer = new Timer(60 * 1000);
             _consumers = new List<ApiConsumer>();
             _stateChangeListeners = new Dictionary<object, Action<Entity>>();
             _entitiesListListeners = new List<Action<List<Entity>>>();
             _notificationListeners = new List<Action<NotificationEvent>>();
-            var debug = !true;
-            if (debug)
+            if (_debug)
             {
                 _consumers.Add(
-                    new ApiConsumer(msg => true, msg => ConsoleWriter.WriteLine(msg.Text, ConsoleColor.Gray)));
+                    new ApiConsumer(msg => true,
+                        msg => ConsoleWriter.WriteLine("RECEIVED: " + msg.Text, ConsoleColor.Gray)));
             }
 
             AuthFlow();
@@ -58,7 +59,6 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                 var toRemove = _consumers.Where(c => c.Consume(msg)).ToList();
                 toRemove.ForEach(c => _consumers.Remove(c));
             });
-            // _websocketClient.ReconnectionHappened
             _consumers.Add(
                 new ApiConsumer(
                     msg =>
@@ -95,9 +95,12 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
             {
                 {
-                    ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
-                    Authenticated = false;
-                    Authenticate();
+                    if (recInfo.Type != ReconnectionType.Initial)
+                    {
+                        ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
+                        Authenticated = false;
+                        Authenticate();
+                    }
                 }
             });
         }
@@ -126,11 +129,15 @@ namespace Home_Assistant_Taskbar_Menu.Connection
         {
             ConsoleWriter.WriteLine("STARTING", ConsoleColor.Blue);
             await _websocketClient.Start();
-            _timer.Elapsed += (sender, args) => Task.Run(Ping);
+            _timer.Elapsed += (sender, args) => Ping();
             _timer.AutoReset = true;
             _timer.Enabled = true;
         }
 
+        public void Disconnect()
+        {
+            _websocketClient.Dispose();
+        }
 
         private void AuthFlow()
         {
@@ -150,38 +157,41 @@ namespace Home_Assistant_Taskbar_Menu.Connection
                     {
                         ConsoleWriter.WriteLine("AUTH OK", ConsoleColor.Green);
                         Authenticated = true;
-                        Task.Run(SubscribeStateChange);
                         Task.Run(GetStates);
+                        SubscribeStateChange();
                     }));
         }
 
         private void Authenticate()
         {
             var authMessage = $"{{\"type\": \"auth\",\"access_token\": \"{_token}\"}}";
-            _websocketClient.Send(authMessage);
+            CallApi(authMessage);
         }
 
-        private async Task SubscribeStateChange()
+        private void SubscribeStateChange()
         {
             ConsoleWriter.WriteLine("SUBSCRIBE STATE CHANGES", ConsoleColor.Blue);
             var id = _counter++;
-            var subscribeMsg = $"{{ \"id\": {id},\"type\": \"subscribe_events\",\"event_type\": \"state_changed\"}}";
-            await CallApi(id, subscribeMsg);
+            var subscribeMsg = $"{{\"id\": {id},\"type\": \"subscribe_events\",\"event_type\": \"state_changed\"}}";
+            CallApi(subscribeMsg);
         }
 
-        private async Task Ping()
+        private void Ping()
         {
-            ConsoleWriter.WriteLine("PING", ConsoleColor.Blue);
-            var id = _counter++;
-            var subscribeMsg = $"{{ \"id\": {id},\"type\": \"ping\"}}";
-            await CallApi(id, subscribeMsg);
+            if (Authenticated)
+            {
+                ConsoleWriter.WriteLine("PING", ConsoleColor.Blue);
+                var id = _counter++;
+                var subscribeMsg = $"{{\"id\": {id},\"type\": \"ping\"}}";
+                CallApi(subscribeMsg);
+            }
         }
 
         private async Task GetStates()
         {
             ConsoleWriter.WriteLine("GETTING STATES", ConsoleColor.Blue);
             var id = _counter++;
-            var subscribeMsg = $"{{ \"id\": {id},\"type\": \"get_states\"}}";
+            var subscribeMsg = $"{{\"id\": {id},\"type\": \"get_states\"}}";
             await CallApi(id, subscribeMsg, msg =>
             {
                 List<Entity> states = EntityCreator.CreateFromStateList(msg.Text);
@@ -190,14 +200,20 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             });
         }
 
-        private async Task CallApi(long id, string message, Action<ResponseMessage> resultHandler = null)
+        private async Task CallApi(long id, string message, Action<ResponseMessage> resultHandler = null,
+            bool waitFotAuth = true)
         {
-            while (!Authenticated)
+            while (!Authenticated & waitFotAuth)
             {
                 await Task.Delay(10);
             }
 
-            await Task.Run(() => _websocketClient.Send(message));
+            if (!Authenticated)
+            {
+                return;
+            }
+
+            await Task.Run(() => CallApi(message));
             if (resultHandler != null)
             {
                 var tuple = new ApiConsumer(
@@ -212,7 +228,17 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             }
         }
 
-        public async Task CallService(HomeAssistantServiceCallData serviceCallData)
+        private void CallApi(string message)
+        {
+            if (_debug)
+            {
+                ConsoleWriter.WriteLine("SENT: " + message, ConsoleColor.Gray);
+            }
+
+            _websocketClient.Send(message);
+        }
+
+        public void CallService(HomeAssistantServiceCallData serviceCallData)
         {
             var id = _counter++;
             JObject serviceCallObject = JObject.FromObject(serviceCallData);
@@ -220,7 +246,7 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             serviceCallObject["type"] = "call_service";
             var json = JsonConvert.SerializeObject(serviceCallObject);
             ConsoleWriter.WriteLine($"CALLING SERVICE: {json}", ConsoleColor.Blue);
-            await CallApi(id, json);
+            CallApi(json);
         }
 
         public void AddNotificationListener(Action<NotificationEvent> listener)

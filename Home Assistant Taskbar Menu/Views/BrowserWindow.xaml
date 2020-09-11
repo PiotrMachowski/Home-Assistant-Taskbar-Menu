@@ -1,0 +1,91 @@
+﻿<Window x:Class="Home_Assistant_Taskbar_Menu.Views.BrowserWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Home_Assistant_Taskbar_Menu.Views"
+        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        mc:Ignorable="d"
+        Icon="../Images/small.ico"
+        Title="Home Assistant" Height="700" Width="450"
+        MinHeight="300" MinWidth="400"
+        ResizeMode="CanResize"
+        WindowStyle="SingleBorderWindow"
+        Closed="BrowserWindow_OnClosed"
+        WindowStartupLocation="Manual">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="1"
+            CornerRadius="0"
+            ResizeBorderThickness="4"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border BorderThickness="0">
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="Maximized">
+                        <Setter Property="Margin" Value="8" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="Normal">
+                        <Setter Property="Margin" Value="0" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <DockPanel>
+            <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"
+                                      DockPanel.Dock="Top" Height="30"
+                                      MouseDown="HeaderMouseDown" Padding="2">
+                <Grid>
+                    <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" />
+                        <Label FontSize="16">Home Assistant</Label>
+                    </StackPanel>
+                    <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="CloseButton" BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                                Width="Auto">
+                            <materialDesign:PackIcon Kind="Close" Width="Auto" Height="Auto" />
+                        </Button>
+                        <Button Name="Maximize" Padding="0" Margin="0,0,10,0" Height="Auto"
+                                Click="MaximizeRestoreButton"
+                                BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                HorizontalAlignment="Right" Width="Auto">
+                            <materialDesign:PackIcon Kind="WindowMaximize" Width="Auto" Height="Auto"
+                                                     Name="MaximizeMinimizeIcon" />
+                        </Button>
+                        <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="MinimizeButton" BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                                Width="Auto">
+                            <materialDesign:PackIcon Kind="WindowMinimize" Width="Auto" Height="Auto" />
+                        </Button>
+                        <Button Padding="0" Margin="20,0,10,0" Height="Auto" Click="BrowserButton" BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                                Width="Auto" ToolTip="Open in browser">
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="Auto" Height="Auto" />
+                        </Button>
+                        <Button Padding="0" Margin="0,0,10,0" Height="Auto" Click="RefreshButton" BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Right"
+                                Width="Auto" ToolTip="Refresh">
+                            <materialDesign:PackIcon Kind="Refresh" Width="Auto" Height="Auto" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:ColorZone>
+
+            <Grid>
+                <wpf:ChromiumWebBrowser x:Name="Browser" />
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>

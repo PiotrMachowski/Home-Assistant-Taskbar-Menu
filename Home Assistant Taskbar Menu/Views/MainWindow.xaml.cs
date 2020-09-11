@@ -23,6 +23,7 @@ namespace Home_Assistant_Taskbar_Menu
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly BrowserWindow _browserWindow;
         private AboutWindow _aboutWindow;
         private SearchWindow _searchWindow;
         private ViewConfigurationWindow _viewConfigurationWindow;
@@ -36,23 +37,23 @@ namespace Home_Assistant_Taskbar_Menu
         public MainWindow(Configuration configuration, ViewConfiguration viewConfiguration)
         {
             var latestVersion = ResourceProvider.LatestVersion();
+            _browserWindow = new BrowserWindow(configuration);
             _viewConfiguration = viewConfiguration;
             _stateObjects = new List<Entity>();
             Menu = new ObservableCollection<UIElement>();
             InitializeComponent();
-            _defaultMenuItems = CreateDefaultMenuItems(configuration.Url, latestVersion);
+            _defaultMenuItems = CreateDefaultMenuItems(configuration, latestVersion);
             TaskbarMenuRoot.ItemsSource = Menu;
             Task.Run(() => { InitConnection(configuration).Wait(); });
         }
 
-        private List<FrameworkElement> CreateDefaultMenuItems(string configurationUrl,
+        private List<FrameworkElement> CreateDefaultMenuItems(Configuration configuration,
             (string version, string url) latestVersion)
         {
-            var showUpdate = !ResourceProvider.IsUpToDate(latestVersion);
-            var url = configurationUrl.Replace("wss://", "https://")
-                .Replace("ws://", "http://")
-                .Replace("/api/websocket", "");
+            var showUpdate = !!ResourceProvider.IsUpToDate(latestVersion);
             Grid grid = new Grid() {MinWidth = 220};
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
             grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
             grid.ColumnDefinitions.Add(new ColumnDefinition());
             grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
@@ -78,8 +79,10 @@ namespace Home_Assistant_Taskbar_Menu
                     UpdateTree();
                 }
             });
-            CreateMenuIcon(grid, PackIconKind.HomeAssistant, "Open Home Assistant in Browser",
-                () => Process.Start(url));
+            CreateMenuIcon(grid, PackIconKind.HomeAssistant, "Open Home Assistant",
+                () => _browserWindow.Show());
+            CreateMenuIcon(grid, PackIconKind.OpenInBrowser, "Open Home Assistant in Browser",
+                () => Process.Start(configuration.HttpUrl()));
             CreateMenuIcon(grid, PackIconKind.About, "About HA Taskbar Menu", () =>
             {
                 _aboutWindow?.Close();
@@ -136,7 +139,7 @@ namespace Home_Assistant_Taskbar_Menu
 
         private async Task InitConnection(Configuration configuration)
         {
-            HaClientContext.HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(configuration);
+            HaClientContext.Initialize(configuration);
             await HaClientContext.Start();
             HaClientContext.AddStateChangeListener(this, UpdateState);
             HaClientContext.AddEntitiesListListener(HandleNewEntitiesList);
@@ -210,7 +213,9 @@ namespace Home_Assistant_Taskbar_Menu
             }
             else
             {
-                Menu.Add(new MenuItem {Header = "Not connected", IsEnabled = false});
+                MenuItem reconnect = new MenuItem {Header = "Reconnect", IsEnabled = true};
+                reconnect.Click += (sender, args) => { HaClientContext.Recreate(); };
+                Menu.Add(reconnect);
             }
 
             _defaultMenuItems.ForEach(Menu.Add);
@@ -244,6 +249,11 @@ namespace Home_Assistant_Taskbar_Menu
             {
                 return new Icon(iconStream);
             }
+        }
+
+        private void RightClick(object sender, RoutedEventArgs e)
+        {
+            _browserWindow.Show();
         }
     }
 }

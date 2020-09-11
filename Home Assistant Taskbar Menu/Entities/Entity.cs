@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Utils;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;

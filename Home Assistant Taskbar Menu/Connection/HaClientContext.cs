@@ -2,14 +2,28 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
+using Home_Assistant_Taskbar_Menu.Utils;
 
-namespace Home_Assistant_Taskbar_Menu
+namespace Home_Assistant_Taskbar_Menu.Connection
 {
     public static class HaClientContext
     {
-        public static HomeAssistantWebsocketsClient HomeAssistantWebsocketClient { get; set; }
+        private static Configuration Configuration { get; set; }
+        private static HomeAssistantWebsocketsClient HomeAssistantWebsocketClient { get; set; }
+
+        public static void Initialize(Configuration configuration)
+        {
+            Configuration = configuration;
+            HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(Configuration);
+        }
+
+        public static async void Recreate()
+        {
+            HomeAssistantWebsocketClient?.Disconnect();
+            HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(Configuration);
+            await Start();
+        }
 
         public static async Task Start()
         {

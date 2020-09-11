@@ -83,7 +83,6 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             catch (Exception)
             {
                 ConsoleWriter.WriteLine($"ERROR CREATING MENU ITEM FOR: {entityId}", ConsoleColor.Red);
-                //ignored
             }
 
             return null;
@@ -92,7 +91,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         public static List<Entity> CreateFromStateList(string json)
         {
             return JObject.Parse(json)["result"].Children<JToken>()
-                .Select(jtoken => Create(jtoken))
+                .Select(Create)
                 .Where(v => v != null)
                 .ToList();
         }

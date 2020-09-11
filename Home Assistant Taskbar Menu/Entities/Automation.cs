@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Home_Assistant_Taskbar_Menu.Connection;
 using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities

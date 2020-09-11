@@ -11,5 +11,12 @@
             Url = url;
             Token = token;
         }
+
+        public string HttpUrl()
+        {
+            return Url.Replace("wss://", "https://")
+                .Replace("ws://", "http://")
+                .Replace("/api/websocket", "");
+        }
     }
 }

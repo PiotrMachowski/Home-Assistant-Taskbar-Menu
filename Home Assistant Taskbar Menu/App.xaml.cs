@@ -12,6 +12,7 @@ namespace Home_Assistant_Taskbar_Menu
     {
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            Storage.InitConfigDirectory();
             Configuration configuration = Storage.RestoreConfiguration();
             ViewConfiguration viewConfiguration = Storage.RestoreViewConfiguration();
 
