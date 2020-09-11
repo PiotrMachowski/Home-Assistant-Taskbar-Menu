@@ -22,7 +22,7 @@ Download installer from the latest [release](https://github.com/PiotrMachowski/H
 
 ### Connection
 
-A configuration window will be opened at first run. Provide an URL and token, check the configuration and save it.
+A configuration window will be opened at first run. Provide an URL and [token](https://www.home-assistant.io/docs/authentication/#your-account-profile), check the configuration and save it.
 
 ![auth_1](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/raw/master/Images/auth_1.png)
 
