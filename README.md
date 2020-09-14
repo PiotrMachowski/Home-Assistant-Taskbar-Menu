@@ -18,6 +18,8 @@ It can control entities from [supported domains](#application), display Home Ass
 
 Download installer from the latest [release](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/releases/latest).
 
+If you do not have administrator rights you can download archive file and extract it in a desired location.
+
 ## Configuration
 
 ### Connection
