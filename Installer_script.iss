@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define APP_NAME         "Home Assistant Taskbar Menu"
-#define APP_VERSION      "1.1.0.0"
+#define APP_VERSION      "1.1.1.0"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.

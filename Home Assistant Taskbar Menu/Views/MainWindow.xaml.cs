@@ -50,7 +50,7 @@ namespace Home_Assistant_Taskbar_Menu
         private List<FrameworkElement> CreateDefaultMenuItems(Configuration configuration,
             (string version, string url) latestVersion)
         {
-            var showUpdate = !!ResourceProvider.IsUpToDate(latestVersion);
+            var showUpdate = !ResourceProvider.IsUpToDate(latestVersion);
             Grid grid = new Grid() {MinWidth = 220};
             grid.ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
             grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -80,7 +80,7 @@ namespace Home_Assistant_Taskbar_Menu
                 }
             });
             CreateMenuIcon(grid, PackIconKind.HomeAssistant, "Open Home Assistant",
-                () => _browserWindow.Show());
+                () => ShowBrowser(null, null));
             CreateMenuIcon(grid, PackIconKind.OpenInBrowser, "Open Home Assistant in Browser",
                 () => Process.Start(configuration.HttpUrl()));
             CreateMenuIcon(grid, PackIconKind.About, "About HA Taskbar Menu", () =>
@@ -251,9 +251,10 @@ namespace Home_Assistant_Taskbar_Menu
             }
         }
 
-        private void RightClick(object sender, RoutedEventArgs e)
+        private void ShowBrowser(object sender, RoutedEventArgs e)
         {
             _browserWindow.Show();
+            _browserWindow.Activate();
         }
     }
 }

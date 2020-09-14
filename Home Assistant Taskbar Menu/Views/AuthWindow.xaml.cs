@@ -17,11 +17,12 @@ namespace Home_Assistant_Taskbar_Menu
     public partial class AuthWindow : Window
     {
         private static readonly Brush InvalidColor = new SolidColorBrush(Color.FromArgb(52, 255, 0, 0));
-        private static readonly Brush NormalColor = new SolidColorBrush(Colors.White);
+        private static Brush _normalColor;
 
         public AuthWindow()
         {
             InitializeComponent();
+            _normalColor = UrlTextBox.Background;
         }
 
         private void CheckButtonClick(object sender, RoutedEventArgs e)
@@ -41,13 +42,14 @@ namespace Home_Assistant_Taskbar_Menu
         {
             string token = TokenTextBox.Text;
             var output = false;
+            var received = 0;
+            Exception exception = null;
             try
             {
                 CheckButton.IsEnabled = false;
                 SaveButton.IsEnabled = false;
                 WebsocketClient client = new WebsocketClient(new Uri(GetUrl()));
                 var authMessage = $"{{\"type\": \"auth\",\"access_token\": \"{token}\"}}";
-                var received = 0;
                 client.Start();
                 client.MessageReceived.Subscribe(msg =>
                 {
@@ -70,21 +72,34 @@ namespace Home_Assistant_Taskbar_Menu
                     await Task.Delay(50);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //ignored
+                exception = e;
+            }
+
+            if (exception != null)
+            {
+                ConsoleWriter.WriteLine($"Error while connecting: {exception.Message}", ConsoleColor.Red);
+            }
+            else if (!output && received == 10)
+            {
+                ConsoleWriter.WriteLine("Unable to connect", ConsoleColor.Red);
+            }
+            else
+            {
+                ConsoleWriter.WriteLine("Invalid credentials", ConsoleColor.Red);
             }
 
             SaveButton.IsEnabled = output;
-            UrlTextBox.Background = output ? NormalColor : InvalidColor;
-            TokenTextBox.Background = output ? NormalColor : InvalidColor;
+            UrlTextBox.Background = output ? _normalColor : InvalidColor;
+            TokenTextBox.Background = output ? _normalColor : InvalidColor;
             CheckButton.IsEnabled = true;
         }
 
         private void DataChanged(object sender, TextChangedEventArgs e)
         {
-            UrlTextBox.Background = NormalColor;
-            TokenTextBox.Background = NormalColor;
+            UrlTextBox.Background = _normalColor;
+            TokenTextBox.Background = _normalColor;
             SaveButton.IsEnabled = false;
         }
 

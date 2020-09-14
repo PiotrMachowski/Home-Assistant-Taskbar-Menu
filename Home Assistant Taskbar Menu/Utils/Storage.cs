@@ -15,6 +15,8 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         private static string CredentialsPath => $"{_basePath}\\config_credentials.dat";
         private static string ViewConfigPath => $"{_basePath}\\config_view.dat";
         private static string BrowserConfigPath => $"{_basePath}\\config_position.dat";
+        private static string LogPath => $"{_basePath}\\log.txt";
+
         private const string PassPhrase = "ThisIsASecurePassword";
         private const int KeySize = 256;
         private const int DerivationIterations = 1000;
@@ -114,6 +116,14 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             string currentDir = Directory.GetCurrentDirectory().Split('\\').ToList().Last();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             _basePath = $"{appData}\\Home Assistant Taskbar Menu\\{currentDir}";
+            if (!IsConsoleAvailable())
+            {
+                FileStream fileStream = new FileStream(LogPath, FileMode.Create);
+                StreamWriter streamWriter = new StreamWriter(fileStream) {AutoFlush = true};
+                Console.SetOut(streamWriter);
+                Console.SetError(streamWriter);
+            }
+            ConsoleWriter.WriteLine($"Config directory: {_basePath}", ConsoleColor.DarkYellow);
             Directory.CreateDirectory(_basePath);
             MoveFile(CredentialsPathOld, CredentialsPath);
             MoveFile(ViewConfigPathOld, ViewConfigPath);
@@ -209,6 +219,21 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             }
 
             return randomBytes;
+        }
+
+        private static bool IsConsoleAvailable()
+        {
+            bool consolePresent = true;
+            try
+            {
+                int _ = Console.WindowHeight;
+            }
+            catch
+            {
+                consolePresent = false;
+            }
+
+            return consolePresent;
         }
     }
 }

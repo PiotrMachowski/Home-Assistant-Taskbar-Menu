@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Home_Assistant_Taskbar_Menu.Utils
 {
@@ -8,7 +9,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
         {
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(s);
+            Console.WriteLine($"[{DateTime.Now.ToString(CultureInfo.InvariantCulture)}] {s}");
             Console.ForegroundColor = oldColor;
         }
     }

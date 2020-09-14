@@ -16,7 +16,7 @@
         IconSource="/Images/small.ico"
         ToolTip="Home Assistant"
         MenuActivation="LeftOrDoubleClick"
-        TrayRightMouseDown="RightClick"
+        TrayRightMouseDown="ShowBrowser"
         Name="TaskbarIcon">
         <tb:TaskbarIcon.ContextMenu>
             <ContextMenu x:Name="TaskbarMenuRoot" StaysOpen="True" PreviewKeyDown="UIElement_OnKeyDown"/>
