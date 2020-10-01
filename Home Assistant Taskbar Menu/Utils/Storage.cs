@@ -116,6 +116,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             string currentDir = Directory.GetCurrentDirectory().Split('\\').ToList().Last();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             _basePath = $"{appData}\\Home Assistant Taskbar Menu\\{currentDir}";
+            Directory.CreateDirectory(_basePath);
             if (!IsConsoleAvailable())
             {
                 FileStream fileStream = new FileStream(LogPath, FileMode.Create);
@@ -124,7 +125,6 @@ namespace Home_Assistant_Taskbar_Menu.Utils
                 Console.SetError(streamWriter);
             }
             ConsoleWriter.WriteLine($"Config directory: {_basePath}", ConsoleColor.DarkYellow);
-            Directory.CreateDirectory(_basePath);
             MoveFile(CredentialsPathOld, CredentialsPath);
             MoveFile(ViewConfigPathOld, ViewConfigPath);
         }
