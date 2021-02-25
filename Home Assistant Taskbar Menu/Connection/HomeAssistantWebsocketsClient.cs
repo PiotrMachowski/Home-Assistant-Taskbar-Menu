@@ -95,9 +95,14 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             _websocketClient.ReconnectionHappened.Subscribe(recInfo =>
             {
                 {
+                    ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
+                    if (recInfo.Type == ReconnectionType.NoMessageReceived)
+                    {
+                        HaClientContext.Recreate();
+                    }
+
                     if (recInfo.Type != ReconnectionType.Initial)
                     {
-                        ConsoleWriter.WriteLine($"RECONNECTION HAPPENED: {recInfo.Type}", ConsoleColor.Yellow);
                         Authenticated = false;
                         Authenticate();
                     }

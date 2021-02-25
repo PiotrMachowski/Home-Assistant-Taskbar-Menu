@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using Home_Assistant_Taskbar_Menu.Entities;
 using Home_Assistant_Taskbar_Menu.Utils;
@@ -18,11 +19,10 @@ namespace Home_Assistant_Taskbar_Menu.Connection
             HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(Configuration);
         }
 
-        public static async void Recreate()
+        public static void Recreate()
         {
-            HomeAssistantWebsocketClient?.Disconnect();
-            HomeAssistantWebsocketClient = new HomeAssistantWebsocketsClient(Configuration);
-            await Start();
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
         }
 
         public static async Task Start()
