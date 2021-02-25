@@ -90,7 +90,7 @@ In the second row of buttons you can configure other application features:
 
 ## Usage
 
-* You can open built-in browser by clicking taskbar icon with right mouse button.
+* You can open built-in browser by clicking taskbar icon with left mouse button.
 * You can quickly toggle an entity (if supported) by clicking it with right mouse button.
 * To open search menu start typing when mouse is over an open menu.
 * You can close search window by pressing [Esc].
