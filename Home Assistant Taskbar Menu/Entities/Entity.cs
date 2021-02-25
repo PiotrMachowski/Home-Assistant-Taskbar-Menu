@@ -75,12 +75,16 @@ namespace Home_Assistant_Taskbar_Menu.Entities
 
         protected double ParseDouble(string value)
         {
-            return double.Parse(value?.Replace(",", ".") ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture);
+            return value?.Length == 0
+                ? 0
+                : double.Parse(value?.Replace(",", ".") ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         protected int ParseInt(string value)
         {
-            return int.Parse(value?.Replace(",", ".") ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture);
+            return value?.Length == 0
+                ? 0
+                : int.Parse(value?.Replace(",", ".") ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         protected List<string> GetListAttribute(string name)
@@ -88,6 +92,12 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return Attributes.ContainsKey(name)
                 ? ((JArray) Attributes[name]).Select(i => (string) i).ToList()
                 : new List<string>();
+        }
+
+        protected string GetListAttribute(string name, int index)
+        {
+            var attribute = GetListAttribute(name);
+            return attribute.Count > index ? attribute[index] : "";
         }
 
         protected virtual List<string> OffStates()
@@ -154,31 +164,50 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         }
 
         protected Slider CreateSlider(Dispatcher dispatcher, double min, double max, double value, string service,
-            string toolTip, string attribute, double step = 1)
+            string toolTip, string attribute, double step = 1, Action<Slider, double> changer = null,
+            Func<double, object> converter = null)
         {
             var slider = new Slider
             {
                 Minimum = min, Maximum = max, MinWidth = 100, ToolTip = toolTip, Value = value,
                 IsSnapToTickEnabled = true,
-                TickFrequency = step
+                TickFrequency = step,
+                IsMoveToPointEnabled = true
             };
             slider.PreviewMouseUp += (sender, args) =>
             {
-                HaClientContext.CallService(dispatcher, this, service,
-                    Tuple.Create<string, object>(attribute, step == 1 ? (int) slider.Value : slider.Value));
+                if (converter == null)
+                {
+                    HaClientContext.CallService(dispatcher, this, service,
+                        Tuple.Create<string, object>(attribute, step == 1 ? (int) slider.Value : slider.Value));
+                }
+                else
+                {
+                    HaClientContext.CallService(dispatcher, this, service,
+                        Tuple.Create(attribute, converter.Invoke(slider.Value)));
+                }
             };
+
+            if (changer != null)
+            {
+                slider.ValueChanged += (sender, args) => changer.Invoke(slider, args.NewValue);
+                changer.Invoke(slider, value);
+            }
+
             return slider;
         }
 
         protected void AddSliderIfSupported(Dispatcher dispatcher, ItemsControl root, int supportedFeature, double min,
-            double max, double value, string attribute, double step = 1)
+            double max, double value, string attribute, double step = 1, Action<Slider, double> changer = null,
+            Func<double, object> converter = null)
         {
             var supportedFeatures = GetSupportedFeatures();
             var featureToServiceMap = FeatureToServiceMap();
             if (supportedFeatures.Contains(supportedFeature) && featureToServiceMap.ContainsKey(supportedFeature))
             {
                 var (service, header) = featureToServiceMap[supportedFeature];
-                root.Items.Add(CreateSlider(dispatcher, min, max, value, service, header, attribute, step));
+                root.Items.Add(CreateSlider(dispatcher, min, max, value, service, header, attribute, step, changer,
+                    converter));
             }
         }
 
