@@ -111,13 +111,13 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             return position;
         }
 
-        public static void InitConfigDirectory()
+        public static void InitConfigDirectory(bool enableLogging)
         {
             string currentDir = Directory.GetCurrentDirectory().Split('\\').ToList().Last();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             _basePath = $"{appData}\\Home Assistant Taskbar Menu\\{currentDir}";
             Directory.CreateDirectory(_basePath);
-            if (!IsConsoleAvailable())
+            if (!IsConsoleAvailable() && enableLogging)
             {
                 FileStream fileStream = new FileStream(LogPath, FileMode.Create);
                 StreamWriter streamWriter = new StreamWriter(fileStream) {AutoFlush = true};

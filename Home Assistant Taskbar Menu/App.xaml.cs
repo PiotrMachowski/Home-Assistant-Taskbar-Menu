@@ -14,7 +14,8 @@ namespace Home_Assistant_Taskbar_Menu
     {
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            Storage.InitConfigDirectory();
+            bool enableLogging = e.Args.Length == 0;
+            Storage.InitConfigDirectory(enableLogging);
             Configuration configuration = Storage.RestoreConfiguration();
             ViewConfiguration viewConfiguration = Storage.RestoreViewConfiguration();
             if (configuration != null && e.Args.Length > 0)
