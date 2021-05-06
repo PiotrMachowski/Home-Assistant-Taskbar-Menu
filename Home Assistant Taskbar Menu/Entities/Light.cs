@@ -70,10 +70,23 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                     changer: (slider, value) => slider.Foreground = new SolidColorBrush(FromMireds(slider, value)));
                 AddSliderIfSupported(dispatcher, root, SupportedFeatures.WhiteValue, 0, 255,
                     GetIntAttribute("white_value"), "white_value");
-                AddSliderIfSupported(dispatcher, root, SupportedFeatures.SupportColor, 0, 360,
+                AddSliderIfSupported(dispatcher, root, SupportedFeatures.Color, 0, 360,
                     ParseDouble(GetListAttribute("hs_color", 0)), "hs_color", 1,
                     (slider, value) => slider.Foreground = new SolidColorBrush(FromHue(value)),
                     converter: value => new[] {(int) value, 100});
+                if (IsSupported(SupportedFeatures.Effect))
+                {
+                    var effectItem = new MenuItem { Header = "Effect", StaysOpenOnClick = true };
+                    var currentEffect = GetAttribute("effect");
+                    GetListAttribute("effect_list").ForEach(effect =>
+                    {
+                        effectItem.Items.Add(CreateMenuItem(dispatcher, "turn_on", effect,
+                            effect == currentEffect,
+                            data: Tuple.Create<string, object>("effect", effect)));
+                    });
+                    root.Items.Add(effectItem);
+                }
+
             }
 
 
@@ -90,15 +103,15 @@ namespace Home_Assistant_Taskbar_Menu.Entities
         {
             public const int Brightness = 1;
             public const int ColorTemp = 2;
-            public const int SupportEffect = 4;
-            public const int SupportFlash = 8;
-            public const int SupportColor = 16;
-            public const int SupportTransition = 32;
+            public const int Effect = 4;
+            public const int Flash = 8;
+            public const int Color = 16;
+            public const int Transition = 32;
             public const int WhiteValue = 128;
 
             public static List<int> All = new List<int>
             {
-                Brightness, ColorTemp, WhiteValue, SupportColor
+                Brightness, ColorTemp, WhiteValue, Color, Effect
             };
 
             public static Dictionary<int, (string service, string header)> ServiceMap =
@@ -106,7 +119,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                 {
                     {Brightness, (service: "turn_on", header: "Brightness")},
                     {ColorTemp, (service: "turn_on", header: "Color Temperature")},
-                    {SupportColor, (service: "turn_on", header: "Color")},
+                    {Color, (service: "turn_on", header: "Color")},
                     {WhiteValue, (service: "turn_on", header: "White Value")}
                 };
         }
