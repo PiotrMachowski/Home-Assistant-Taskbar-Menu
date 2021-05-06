@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define APP_NAME         "Home Assistant Taskbar Menu"
-#define APP_VERSION      "1.1.2.0"
+#define APP_VERSION      "1.2.0.0"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -55,6 +55,8 @@ Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Hardcodet.Wpf.TaskbarNotifica
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Hardcodet.Wpf.TaskbarNotification.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Hardcodet.Wpf.TaskbarNotification.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Home Assistant Taskbar Menu.application"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Home Assistant Taskbar Menu DEBUG.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Home Assistant Taskbar Menu DEBUG.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Home Assistant Taskbar Menu.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Home Assistant Taskbar Menu.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Home Assistant Taskbar Menu.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
@@ -73,6 +75,8 @@ Source: "Home Assistant Taskbar Menu\bin\x86\Debug\netstandard.dll"; DestDir: "{
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\README.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Home Assistant Taskbar Menu\bin\x86\Debug\RestSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Home Assistant Taskbar Menu\bin\x86\Debug\RestSharp.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\System.AppContext.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Debug\System.Collections.Concurrent.dll"; DestDir: "{app}"; Flags: ignoreversion
