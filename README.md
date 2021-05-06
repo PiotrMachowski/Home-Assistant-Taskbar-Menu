@@ -6,7 +6,7 @@
 # Home Assistant Taskbar Menu
 
 This application is a simple [Home Assistant](https://www.home-assistant.io/) client for Windows.
-It can control entities from [supported domains](#application), display Home Assistant web interface and mirror persistent notifications.
+It can control entities from [supported domains](#application), display Home Assistant web interface, create shortcuts to your favourite actions and mirror persistent notifications.
 
 ![menu_3](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/raw/master/Images/menu_3.png)
 
@@ -103,6 +103,15 @@ You can copy it between computers to use the same view configuration.
 * To start this application with Windows add a shortcut to `StartUp` folder. You can open it by running command `shell:startup` in Run menu (shortcut: [WIN] + [R])
 * To clear browser's cache remove `browserCache` folder from config directory.
 
+
+## Shortcuts
+
+You can use this application to create shortcuts to your favourite service calls (e.g. toggle light).
+* Create a shortcut to `Home Assistant Taskbar Menu.exe` file
+* Add the following text to *Target* section: ` call_service light.toggle {\"entity_id\": \"light.desk\"}`. **Remember to add a backslash before every double quote!**
+  ![shortcut_1](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/raw/master/Images/shortcut_1.png)
+* You can also configure a shortcut key combination using *Shortcut key* section
+  ![shortcut_2](https://github.com/PiotrMachowski/Home-Assistant-Taskbar-Menu/raw/master/Images/shortcut_2.png)
 
 ## Updating
 
