@@ -115,7 +115,7 @@ namespace Home_Assistant_Taskbar_Menu.Entities
             return new Dictionary<int, (string service, string header)>();
         }
 
-        protected List<int> GetSupportedFeatures()
+        protected virtual List<int> GetSupportedFeatures()
         {
             var supportedFeatures = GetIntAttribute("supported_features");
             return AllSupportedFeatures()

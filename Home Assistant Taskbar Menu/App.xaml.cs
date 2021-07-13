@@ -23,7 +23,7 @@ namespace Home_Assistant_Taskbar_Menu
                 if (e.Args[0] == "call_service" && e.Args.Length > 2)
                 {
                     var service = e.Args[1];
-                    var serviceData = string.Join(" ", e.Args.Skip(2).ToList());
+                    var serviceData = string.Join(" ", e.Args.Skip(2).ToList()).Replace("\\\"", "\"");
                     CallService(configuration, service, serviceData);
                     Shutdown();
                     return;
