@@ -75,8 +75,6 @@ Source: "Home Assistant Taskbar Menu\bin\x86\Release\netstandard.dll"; DestDir: 
 Source: "Home Assistant Taskbar Menu\bin\x86\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Release\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Release\README.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Home Assistant Taskbar Menu\bin\x86\Release\RestSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Home Assistant Taskbar Menu\bin\x86\Release\RestSharp.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Release\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Release\System.AppContext.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Home Assistant Taskbar Menu\bin\x86\Release\System.Collections.Concurrent.dll"; DestDir: "{app}"; Flags: ignoreversion
