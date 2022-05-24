@@ -40,17 +40,22 @@ After successful configuration a `config_credentials.dat` file will be created a
 
 This application can control entities from following domains:
 * `automation`
+* `button`
 * `climate`
 * `cover`
 * `fan`
 * `input_boolean`
+* `input_button`
 * `input_number`
 * `input_select`
 * `light`
 * `lock`
 * `media_player`
+* `number`
 * `scene`
 * `script`
+* `select`
+* `siren`
 * `switch`
 * `vacuum`
 
