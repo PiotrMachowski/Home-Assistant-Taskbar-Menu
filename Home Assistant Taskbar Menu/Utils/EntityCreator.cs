@@ -10,20 +10,25 @@ namespace Home_Assistant_Taskbar_Menu.Utils
     {
         private static readonly List<string> SupportedDomains = new List<string>
         {
-            Automation.DomainName,
-            Climate.DomainName,
-            Cover.DomainName,
-            Fan.DomainName,
-            InputBoolean.DomainName,
-            InputNumber.DomainName,
-            InputSelect.DomainName,
-            Light.DomainName,
-            Lock.DomainName,
-            MediaPlayer.DomainName,
-            Scene.DomainName,
-            Script.DomainName,
-            Switch.DomainName,
-            Vacuum.DomainName
+            AutomationEntity.DomainName,
+            ButtonEntity.DomainName,
+            ClimateEntity.DomainName,
+            CoverEntity.DomainName,
+            FanEntity.DomainName,
+            InputBooleanEntity.DomainName,
+            InputButton.DomainName,
+            InputNumberEntity.DomainName,
+            InputSelectEntity.DomainName,
+            LightEntity.DomainName,
+            LockEntity.DomainName,
+            MediaPlayerEntity.DomainName,
+            NumberEntity.DomainName,
+            SceneEntity.DomainName,
+            ScriptEntity.DomainName,
+            SelectEntity.DomainName,
+            SirenEntity.DomainName,
+            SwitchEntity.DomainName,
+            VacuumEntity.DomainName
         };
 
 
@@ -33,34 +38,44 @@ namespace Home_Assistant_Taskbar_Menu.Utils
             JToken newState = jToken;
             switch (domain)
             {
-                case Automation.DomainName:
-                    return newState?.ToObject<Automation>();
-                case Climate.DomainName:
-                    return newState?.ToObject<Climate>();
-                case Cover.DomainName:
-                    return newState?.ToObject<Cover>();
-                case Fan.DomainName:
-                    return newState?.ToObject<Fan>();
-                case InputBoolean.DomainName:
-                    return newState?.ToObject<InputBoolean>();
-                case InputNumber.DomainName:
-                    return newState?.ToObject<InputNumber>();
-                case InputSelect.DomainName:
-                    return newState?.ToObject<InputSelect>();
-                case Light.DomainName:
-                    return newState?.ToObject<Light>();
-                case Lock.DomainName:
-                    return newState?.ToObject<Lock>();
-                case MediaPlayer.DomainName:
-                    return newState?.ToObject<MediaPlayer>();
-                case Scene.DomainName:
-                    return newState?.ToObject<Scene>();
-                case Script.DomainName:
-                    return newState?.ToObject<Script>();
-                case Switch.DomainName:
-                    return newState?.ToObject<Switch>();
-                case Vacuum.DomainName:
-                    return newState?.ToObject<Vacuum>();
+                case AutomationEntity.DomainName:
+                    return newState?.ToObject<AutomationEntity>();
+                case ButtonEntity.DomainName:
+                    return newState?.ToObject<ButtonEntity>();
+                case ClimateEntity.DomainName:
+                    return newState?.ToObject<ClimateEntity>();
+                case CoverEntity.DomainName:
+                    return newState?.ToObject<CoverEntity>();
+                case FanEntity.DomainName:
+                    return newState?.ToObject<FanEntity>();
+                case InputBooleanEntity.DomainName:
+                    return newState?.ToObject<InputBooleanEntity>();
+                case InputButton.DomainName:
+                    return newState?.ToObject<InputButton>();
+                case InputNumberEntity.DomainName:
+                    return newState?.ToObject<InputNumberEntity>();
+                case InputSelectEntity.DomainName:
+                    return newState?.ToObject<InputSelectEntity>();
+                case LightEntity.DomainName:
+                    return newState?.ToObject<LightEntity>();
+                case LockEntity.DomainName:
+                    return newState?.ToObject<LockEntity>();
+                case MediaPlayerEntity.DomainName:
+                    return newState?.ToObject<MediaPlayerEntity>();
+                case NumberEntity.DomainName:
+                    return newState?.ToObject<NumberEntity>();
+                case SceneEntity.DomainName:
+                    return newState?.ToObject<SceneEntity>();
+                case ScriptEntity.DomainName:
+                    return newState?.ToObject<ScriptEntity>();
+                case SelectEntity.DomainName:
+                    return newState?.ToObject<SelectEntity>();
+                case SirenEntity.DomainName:
+                    return newState?.ToObject<SirenEntity>();
+                case SwitchEntity.DomainName:
+                    return newState?.ToObject<SwitchEntity>();
+                case VacuumEntity.DomainName:
+                    return newState?.ToObject<VacuumEntity>();
             }
 
             return null;

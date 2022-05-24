@@ -8,7 +8,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Fan : Entity
+    public class FanEntity : Entity
     {
         public const string DomainName = "fan";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};

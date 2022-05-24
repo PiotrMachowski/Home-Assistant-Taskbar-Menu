@@ -8,7 +8,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Vacuum : Entity
+    public class VacuumEntity : Entity
     {
         public const string DomainName = "vacuum";
 

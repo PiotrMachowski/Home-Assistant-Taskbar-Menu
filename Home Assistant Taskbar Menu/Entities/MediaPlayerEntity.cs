@@ -8,7 +8,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class MediaPlayer : Entity
+    public class MediaPlayerEntity : Entity
     {
         public const string DomainName = "media_player";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};

@@ -103,7 +103,7 @@ namespace Home_Assistant_Taskbar_Menu
                     var header = $"{viewConfiguration.Name} ({viewConfiguration.EntityId})";
                     if (string.IsNullOrEmpty(viewConfiguration.Name))
                     {
-                        header = e.ToString();
+                        header = e?.ToString() ?? viewConfiguration.EntityId;
                     }
 
                     var entityRow = new TreeViewItem

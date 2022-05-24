@@ -150,7 +150,7 @@ namespace Home_Assistant_Taskbar_Menu
         private List<Control> CreateStructure(List<Entity> stateObjects, ViewConfiguration viewConfiguration)
         {
             return viewConfiguration.Children.Count == 0
-                ? stateObjects.Where(e => e.Domain() != Automation.DomainName && e.Domain() != Script.DomainName)
+                ? stateObjects.Where(e => e.Domain() != AutomationEntity.DomainName && e.Domain() != ScriptEntity.DomainName)
                     .Select(e => (Control) e.ToMenuItemSafe(Dispatcher, null))
                     .Take(100)
                     .ToList()

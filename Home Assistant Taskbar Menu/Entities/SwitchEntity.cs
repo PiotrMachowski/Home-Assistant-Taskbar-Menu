@@ -4,9 +4,9 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Script : Entity
+    public class SwitchEntity : Entity
     {
-        public const string DomainName = "script";
+        public const string DomainName = "switch";
 
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};
 

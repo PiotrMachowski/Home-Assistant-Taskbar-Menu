@@ -3,7 +3,7 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Scene : Entity
+    public class SceneEntity : Entity
     {
         public const string DomainName = "scene";
 

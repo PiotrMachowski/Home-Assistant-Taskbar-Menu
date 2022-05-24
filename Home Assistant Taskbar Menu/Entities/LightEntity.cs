@@ -10,7 +10,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Light : Entity
+    public class LightEntity : Entity
     {
         public const string DomainName = "light";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};
@@ -89,7 +89,6 @@ namespace Home_Assistant_Taskbar_Menu.Entities
                     root.Items.Add(effectItem);
                 }
             }
-
 
             return root;
         }

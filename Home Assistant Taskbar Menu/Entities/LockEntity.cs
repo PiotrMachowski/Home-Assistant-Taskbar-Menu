@@ -5,7 +5,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Lock : Entity
+    public class LockEntity : Entity
     {
         public const string DomainName = "lock";
         private static readonly List<string> OffStatesList = new List<string> {States.Closed, States.Unavailable};

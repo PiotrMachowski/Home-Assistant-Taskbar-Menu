@@ -7,7 +7,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Cover : Entity
+    public class CoverEntity : Entity
     {
         public const string DomainName = "cover";
         private static readonly List<string> OffStatesList = new List<string> {States.Closed, States.Unavailable};

@@ -4,10 +4,9 @@ using System.Windows.Threading;
 
 namespace Home_Assistant_Taskbar_Menu.Entities
 {
-    public class Switch : Entity
+    public class InputBooleanEntity : Entity
     {
-        public const string DomainName = "switch";
-
+        public const string DomainName = "input_boolean";
         private static readonly List<string> OffStatesList = new List<string> {States.Off, States.Unavailable};
 
         public override string Domain()
