@@ -80,7 +80,7 @@ namespace Home_Assistant_Taskbar_Menu
                 }
             });
             CreateMenuIcon(grid, PackIconKind.HomeAssistant, "Open Home Assistant",
-                () => ShowBrowser(null, null));
+                () => ToggleBrowser(null, null));
             CreateMenuIcon(grid, PackIconKind.OpenInBrowser, "Open Home Assistant in Browser",
                 () => Process.Start(configuration.HttpUrl()));
             CreateMenuIcon(grid, PackIconKind.About, "About HA Taskbar Menu", () =>
@@ -251,10 +251,20 @@ namespace Home_Assistant_Taskbar_Menu
             }
         }
 
-        private void ShowBrowser(object sender, RoutedEventArgs e)
+        private void ToggleBrowser(object sender, RoutedEventArgs e)
+        {
+            if(_browserWindow.Visibility != Visibility.Visible)
         {
             _browserWindow.Show();
             _browserWindow.Activate();
+                Debug.WriteLine("Showing browser window.");
+            }
+            else
+            {
+                _browserWindow.Hide();
+                Debug.WriteLine("Hiding browser window.");
+            }
+
         }
     }
 }
