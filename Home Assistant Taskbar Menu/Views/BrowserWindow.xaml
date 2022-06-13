@@ -16,6 +16,7 @@
         ResizeMode="CanResize"
         WindowStyle="SingleBorderWindow"
         Closed="BrowserWindow_OnClosed"
+        Activated="Window_Activated"
         WindowStartupLocation="Manual">
     <WindowChrome.WindowChrome>
         <WindowChrome
