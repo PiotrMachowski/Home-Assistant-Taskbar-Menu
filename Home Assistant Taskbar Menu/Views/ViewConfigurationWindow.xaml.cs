@@ -207,11 +207,20 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void ChangeThemeClick(object sender, RoutedEventArgs e)
         {
-            ViewConfiguration.Properties[ViewConfiguration.ThemeKey] =
-                ViewConfiguration.GetProperty(ViewConfiguration.ThemeKey) == ViewConfiguration.LightTheme
-                    ? ViewConfiguration.DarkTheme
-                    : ViewConfiguration.LightTheme;
+            ViewConfiguration.Themes currentTheme;
+            Enum.TryParse<ViewConfiguration.Themes>(ViewConfiguration.Properties[ViewConfiguration.ThemeKey], true, out currentTheme);
+
+            currentTheme += 1;
+            if((int)currentTheme > Enum.GetNames(typeof(ViewConfiguration.Themes)).Length - 1)
+            {
+                currentTheme = 0;
+            }
+
+            ViewConfiguration.Properties[ViewConfiguration.ThemeKey] = Enum.GetName(typeof(ViewConfiguration.Themes), currentTheme);
+
             ChangeThemeButton.Content = $"Theme: {ViewConfiguration.GetProperty(ViewConfiguration.ThemeKey)}";
+
+            App.ReloadTheme(ViewConfiguration);
         }
 
         private void ChangeMirrorNotificationsClick(object sender, RoutedEventArgs e)
