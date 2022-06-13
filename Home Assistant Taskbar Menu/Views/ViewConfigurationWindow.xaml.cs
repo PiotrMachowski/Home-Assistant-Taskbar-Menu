@@ -49,7 +49,7 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void AddEntityClick(object sender, RoutedEventArgs e)
         {
-            var viewConfigurationDialog = new ViewConfigurationDialog(_stateObjects);
+            var viewConfigurationDialog = new ViewConfigurationDialog(_stateObjects, this);
             var completed = viewConfigurationDialog.ShowDialog();
             if (completed == true)
             {
@@ -60,7 +60,7 @@ namespace Home_Assistant_Taskbar_Menu
 
         private void AddNodeClick(object sender, RoutedEventArgs e)
         {
-            var viewConfigurationDialog = new ViewConfigurationDialog();
+            var viewConfigurationDialog = new ViewConfigurationDialog(this);
             var completed = viewConfigurationDialog.ShowDialog();
             if (completed == true)
             {
@@ -140,7 +140,7 @@ namespace Home_Assistant_Taskbar_Menu
                     };
                     addEntityMenuItem.Click += (sender, args) =>
                     {
-                        var viewConfigurationDialog = new ViewConfigurationDialog(_stateObjects);
+                        var viewConfigurationDialog = new ViewConfigurationDialog(_stateObjects, this);
                         var completed = viewConfigurationDialog
                             .ShowDialog();
                         if (completed == true)
@@ -151,7 +151,7 @@ namespace Home_Assistant_Taskbar_Menu
                     };
                     addNodeMenuItem.Click += (sender, args) =>
                     {
-                        var viewConfigurationDialog = new ViewConfigurationDialog();
+                        var viewConfigurationDialog = new ViewConfigurationDialog(this);
                         var completed = viewConfigurationDialog.ShowDialog();
                         if (completed == true)
                         {
