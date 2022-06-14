@@ -181,6 +181,7 @@ namespace Home_Assistant_Taskbar_Menu
         private void Save(object sender, RoutedEventArgs e)
         {
             Storage.Save(ViewConfiguration);
+            App.ReloadTheme(ViewConfiguration);
             DialogResult = true;
         }
 
@@ -217,10 +218,7 @@ namespace Home_Assistant_Taskbar_Menu
             }
 
             ViewConfiguration.Properties[ViewConfiguration.ThemeKey] = Enum.GetName(typeof(ViewConfiguration.Themes), currentTheme);
-
             ChangeThemeButton.Content = $"Theme: {ViewConfiguration.GetProperty(ViewConfiguration.ThemeKey)}";
-
-            App.ReloadTheme(ViewConfiguration);
         }
 
         private void ChangeMirrorNotificationsClick(object sender, RoutedEventArgs e)
