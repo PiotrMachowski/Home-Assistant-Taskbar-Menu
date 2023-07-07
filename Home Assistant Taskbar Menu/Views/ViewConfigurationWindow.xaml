@@ -46,7 +46,7 @@
                 <Grid>
                     <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" />
+                        <materialDesign:PackIcon Kind="HomeAssistant" Width="Auto" Height="Auto" VerticalAlignment="Center" />
                         <Label FontSize="16">View Configuration</Label>
                     </StackPanel>
                     <StackPanel Width="Auto" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -90,8 +90,8 @@
                         Height="Auto" ToolTip="Add node to root"/>
                 <Button Content="Add Separator" Margin="3" Grid.Row="1" Grid.Column="2"
                         Click="AddSeparatorClick" Height="Auto" ToolTip="Add separator to root"/>
-                <Button Content="Theme: Light" Margin="3" Grid.Row="2" Grid.Column="0" Name="ChangeThemeButton"
-                        Click="ChangeThemeClick" Height="Auto" ToolTip="Change will take effect after application restart"/>
+                <Button Content="Theme" Margin="3" Grid.Row="2" Grid.Column="0" Name="ChangeThemeButton"
+                        Click="ChangeThemeClick" Height="Auto" ToolTip="Change theme"/>
                 <Button Content="Mirror notifications: true" Margin="3" Grid.Row="2" Grid.Column="1" Name="MirrorNotificationsButton"
                         Click="ChangeMirrorNotificationsClick" Height="Auto"/>
                 <Button Content="Save" Margin="3" Grid.Row="2" Grid.Column="2" Click="Save"

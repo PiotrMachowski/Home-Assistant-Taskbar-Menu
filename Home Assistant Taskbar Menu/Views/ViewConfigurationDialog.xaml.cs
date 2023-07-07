@@ -15,17 +15,19 @@ namespace Home_Assistant_Taskbar_Menu
 
         public ViewConfiguration ViewConfiguration { get; set; }
 
-        public ViewConfigurationDialog(List<Entity> stateObjects)
+        public ViewConfigurationDialog(List<Entity> stateObjects, ViewConfigurationWindow owner)
         {
             InitializeComponent();
+            this.Owner = owner;
             stateObjects.ForEach(s => EntityIdComboBox.Items.Add(s));
             NameTextBox.ToolTip = "Leave empty to use name retrieved from Home Assistant";
             _isEntity = true;
         }
 
-        public ViewConfigurationDialog()
+        public ViewConfigurationDialog(ViewConfigurationWindow owner)
         {
             InitializeComponent();
+            this.Owner = owner;
             RowEntityId1.Height = new GridLength(0);
             RowEntityId2.Height = new GridLength(0);
             Height = 130;

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1169
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Home Assistant Taskbar Menu", "Home Assistant Taskbar Menu\Home Assistant Taskbar Menu.csproj", "{B49305F6-8A11-43D6-AD36-864C95D4F015}"
 EndProject

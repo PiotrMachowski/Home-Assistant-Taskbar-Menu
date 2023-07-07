@@ -16,7 +16,7 @@ namespace Home_Assistant_Taskbar_Menu.Views
     {
         private readonly List<Entity> _entities;
 
-        public SearchWindow(string s, List<Entity> entities)
+        public SearchWindow(KeyEventArgs s, List<Entity> entities)
         {
             _entities = new List<Entity>(entities);
             InitializeComponent();
@@ -29,9 +29,9 @@ namespace Home_Assistant_Taskbar_Menu.Views
                     Dispatcher.Invoke(() => UpdateFoundList(null, null));
                 }
             });
-            if (s.Length == 1)
+            if (s != null && s.Key.ToString().Length == 1)
             {
-                SearchBox.Text = s;
+                SearchBox.Text = s.Key.ToString();
             }
 
             SearchBox.CaretIndex = int.MaxValue;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Home_Assistant_Taskbar_Menu.Entities;
 
@@ -7,8 +8,12 @@ namespace Home_Assistant_Taskbar_Menu.Utils
     public class ViewConfiguration
     {
         public const string ThemeKey = "Theme";
-        public const string LightTheme = "Light";
-        public const string DarkTheme = "Dark";
+        public enum Themes
+        {
+           Auto,
+           Light,
+           Dark
+        } 
         public const string MirrorNotificationsKey = "MirrorNotifications";
 
         public Type NodeType { get; set; }
@@ -41,7 +46,7 @@ namespace Home_Assistant_Taskbar_Menu.Utils
                 Children = new List<ViewConfiguration>(),
                 Properties = new Dictionary<string, string>
                 {
-                    {ThemeKey, LightTheme},
+                    {ThemeKey, Enum.GetName(typeof(ViewConfiguration.Themes), ViewConfiguration.Themes.Auto)},
                     {MirrorNotificationsKey, true.ToString()}
                 }
             };

@@ -35,13 +35,6 @@ namespace Home_Assistant_Taskbar_Menu
 
         private static void StartUi(ViewConfiguration viewConfiguration, Configuration configuration)
         {
-            var paletteHelper = new PaletteHelper();
-            var theme = paletteHelper.GetTheme();
-            theme.SetBaseTheme(viewConfiguration.GetProperty(ViewConfiguration.ThemeKey) == ViewConfiguration.LightTheme
-                ? new MaterialDesignLightTheme()
-                : (IBaseTheme) new MaterialDesignDarkTheme());
-            paletteHelper.SetTheme(theme);
-
             if (configuration == null)
             {
                 ConsoleWriter.WriteLine("NO CONFIGURATION", ConsoleColor.Red);
@@ -52,6 +45,35 @@ namespace Home_Assistant_Taskbar_Menu
                 ConsoleWriter.WriteLine($"configuration.Url = {configuration.Url}", ConsoleColor.Green);
                 new MainWindow(configuration, viewConfiguration).Show();
             }
+            
+            ReloadTheme(viewConfiguration);
+        }
+
+        internal static void ReloadTheme(ViewConfiguration viewConfiguration)
+        {
+            var paletteHelper = new PaletteHelper();
+            var theme = paletteHelper.GetTheme();
+
+            ViewConfiguration.Themes currentTheme;
+            Enum.TryParse<ViewConfiguration.Themes>(viewConfiguration.GetProperty(ViewConfiguration.ThemeKey), true, out currentTheme);
+
+            switch (currentTheme)
+            {
+                case ViewConfiguration.Themes.Dark:
+                    theme.SetBaseTheme(new MaterialDesignDarkTheme());
+                    break;
+                case ViewConfiguration.Themes.Auto:
+                    var systemTheme = Theme.GetSystemTheme();
+                    if (systemTheme != null)
+                        theme.SetBaseTheme(systemTheme.Value.GetBaseTheme());
+                    break;
+                case ViewConfiguration.Themes.Light:
+                default:
+                    theme.SetBaseTheme(new MaterialDesignLightTheme());
+                    break;
+            }
+
+            paletteHelper.SetTheme(theme);
         }
 
         private static void CallService(Configuration configuration, string service, string data)

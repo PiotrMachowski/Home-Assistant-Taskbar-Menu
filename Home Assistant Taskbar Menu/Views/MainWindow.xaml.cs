@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using Home_Assistant_Taskbar_Menu.Connection;
 using Home_Assistant_Taskbar_Menu.Entities;
@@ -33,6 +35,71 @@ namespace Home_Assistant_Taskbar_Menu
         private readonly List<Entity> _stateObjects;
 
         public ObservableCollection<UIElement> Menu { get; set; }
+
+        #region Hotkeys
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        private const int HOTKEY_ID = 9000;
+
+        //Modifiers:
+        private const uint MOD_NONE = 0x0000; //(none)
+        private const uint MOD_ALT = 0x0001; //ALT
+        private const uint MOD_CONTROL = 0x0002; //CTRL
+        private const uint MOD_SHIFT = 0x0004; //SHIFT
+        private const uint MOD_WIN = 0x0008; //WINDOWS
+        private const uint KEY_H = 0x48;
+        private const uint KEY_E = 0x45;
+
+        private IntPtr _windowHandle;
+        private HwndSource _source;
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            _windowHandle = new WindowInteropHelper(this).Handle;
+            _source = HwndSource.FromHwnd(_windowHandle);
+            _source.AddHook(HwndHook);
+
+            RegisterHotKey(_windowHandle, HOTKEY_ID, MOD_WIN | MOD_SHIFT, KEY_H); // WIN + SHIFT + H
+            RegisterHotKey(_windowHandle, HOTKEY_ID, MOD_WIN | MOD_SHIFT, KEY_E); // WIN + SHIFT + E
+        }
+
+        private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            const int WM_HOTKEY = 0x0312;
+            switch (msg)
+            {
+                case WM_HOTKEY:
+                    switch (wParam.ToInt32())
+                    {
+                        case HOTKEY_ID:
+                            int vkey = (((int)lParam >> 16) & 0xFFFF);
+                            if (vkey == KEY_H)
+                            {
+                                ToggleBrowser(null, null);
+                            } else if (vkey == KEY_E) {
+                                UIElement_OnKeyDown(null, null);
+                            }
+                            handled = true;
+                            break;
+                    }
+                    break;
+            }
+            return IntPtr.Zero;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _source.RemoveHook(HwndHook);
+            UnregisterHotKey(_windowHandle, HOTKEY_ID);
+            base.OnClosed(e);
+        }
+        #endregion
 
         public MainWindow(Configuration configuration, ViewConfiguration viewConfiguration)
         {
@@ -80,7 +147,7 @@ namespace Home_Assistant_Taskbar_Menu
                 }
             });
             CreateMenuIcon(grid, PackIconKind.HomeAssistant, "Open Home Assistant",
-                () => ShowBrowser(null, null));
+                () => ToggleBrowser(null, null));
             CreateMenuIcon(grid, PackIconKind.OpenInBrowser, "Open Home Assistant in Browser",
                 () => Process.Start(configuration.HttpUrl()));
             CreateMenuIcon(grid, PackIconKind.About, "About HA Taskbar Menu", () =>
@@ -224,7 +291,7 @@ namespace Home_Assistant_Taskbar_Menu
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
         {
             _searchWindow?.Close();
-            _searchWindow = new SearchWindow(e.Key.ToString(), _stateObjects);
+            _searchWindow = new SearchWindow(e, _stateObjects);
             _searchWindow.ShowDialog();
         }
 
@@ -251,10 +318,20 @@ namespace Home_Assistant_Taskbar_Menu
             }
         }
 
-        private void ShowBrowser(object sender, RoutedEventArgs e)
+        private void ToggleBrowser(object sender, RoutedEventArgs e)
+        {
+            if(_browserWindow.Visibility != Visibility.Visible)
         {
             _browserWindow.Show();
             _browserWindow.Activate();
+                Debug.WriteLine("Showing browser window.");
+            }
+            else
+            {
+                _browserWindow.Hide();
+                Debug.WriteLine("Hiding browser window.");
+            }
+
         }
     }
 }
